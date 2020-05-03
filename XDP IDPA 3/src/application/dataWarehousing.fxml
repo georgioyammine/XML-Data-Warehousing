@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" stylesheets="@all.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.dataWarehousingController">
+   <children>
+      <JFXTabPane fx:id="mainTabPane" prefHeight="450.0" prefWidth="800.0">
+         <tabs>
+            <Tab styleClass="C:\Users\user\Desktop\GUI\all.css" text="Home">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="800.0">
+                     <children>
+                        <JFXButton fx:id="addVersion" layoutX="290.0" layoutY="195.0" onAction="#addVersionHandler" prefHeight="62.0" prefWidth="221.0" text="Add new version" />
+                        <Label layoutX="249.0" layoutY="14.0" prefHeight="43.0" prefWidth="128.0" text="Project Name" textFill="#f8f8f1">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="name" layoutX="390.0" layoutY="14.0" prefHeight="43.0" prefWidth="128.0" text="name" textFill="#f8f8f1">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="256.0" layoutY="57.0" prefHeight="43.0" prefWidth="128.0" text="Author" textFill="#f8f8f1">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="author" layoutX="392.0" layoutY="57.0" prefHeight="43.0" prefWidth="128.0" text="author" textFill="#f8f8f1">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="256.0" layoutY="100.0" prefHeight="43.0" prefWidth="128.0" text="Versions" textFill="#f8f8f1">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="nbOfVersions" layoutX="392.0" layoutY="100.0" prefHeight="43.0" prefWidth="128.0" text="nbOfV" textFill="#f8f8f1">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Versions">
+               <content>
+                  <AnchorPane id="versionPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="800.0" stylesheets="@all.css">
+                     <children>
+                        <TableView fx:id="tableview" layoutY="-3.0" prefHeight="401.0" prefWidth="800.0" stylesheets="@tableView.css">
+                          <columns>
+                            <TableColumn fx:id="verCol" prefWidth="65.0" text="Version" />
+                              <TableColumn fx:id="authorCol" prefWidth="116.0" text="Author" />
+                            <TableColumn fx:id="dateCol" prefWidth="111.0" text="Date Added" />
+                              <TableColumn fx:id="sizeCol" prefWidth="79.0" text="Size" />
+                              <TableColumn fx:id="diffCol" minWidth="0.0" prefWidth="76.0" text="Diff Size" />
+                              <TableColumn fx:id="simCol" prefWidth="76.0" text="Similarity " />
+                              <TableColumn fx:id="statCol" minWidth="0.0" prefWidth="98.0" text="Status" />
+                              <TableColumn fx:id="getCol" minWidth="0.0" prefWidth="78.0" text="Get Now" />
+                              <TableColumn fx:id="queryCol" minWidth="0.0" prefWidth="81.0" text="Query" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Query">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="188.0" layoutY="14.0" prefHeight="43.0" prefWidth="87.0" text="Version:" textFill="#b2b2b2">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <JFXComboBox fx:id="versionBox" layoutX="275.0" layoutY="20.0" prefHeight="25.0" prefWidth="125.0" onAction="#versionBoxChanged" unFocusColor="#b2b2b2" />
+                        <JFXCheckBox fx:id="deltaOnly" checkedColor="#10279c" layoutX="573.0" layoutY="23.0" onAction="#updateDropBoxes" text="Changes only" textFill="#b2b2b2" unCheckedColor="#b2b2b2" />
+                        <JFXComboBox fx:id="filter1" layoutX="30.0" layoutY="81.0" prefHeight="25.0" prefWidth="125.0" onAction="#updateDropBoxes2" unFocusColor="#b2b2b2" />
+                        <JFXComboBox fx:id="filter2" layoutX="165.0" layoutY="81.0" prefHeight="25.0" prefWidth="125.0" onAction="#updateDropBoxes3" unFocusColor="#b2b2b2" />
+                        <JFXComboBox fx:id="filter3" layoutX="301.0" layoutY="81.0" prefHeight="25.0" prefWidth="125.0" onAction="#updateDropBoxes4"  unFocusColor="#b2b2b2" />
+                        <JFXComboBox fx:id="filter4" layoutX="437.0" layoutY="81.0" prefHeight="25.0" prefWidth="125.0" unFocusColor="#b2b2b2" />
+                        <TextArea fx:id="queryResult" layoutX="20.0" layoutY="146.0" prefHeight="224.0" prefWidth="761.0" />
+                        <JFXButton layoutX="615.0" layoutY="74.0" onAction="#queryHandle" prefHeight="39.0" prefWidth="123.0" text="Query" />
+                     </children></AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="User">
+               <content>
+                  <AnchorPane fx:id="anchorUser" prefHeight="200.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+            <Tab text="About">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label alignment="CENTER" layoutX="225.0" layoutY="14.0" prefHeight="84.0" prefWidth="350.0" text="XDP: XML Diff and Patch" textAlignment="CENTER" textFill="#f8f8f1">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="181.0" fitWidth="173.0" layoutX="35.0" layoutY="131.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../iconNew.png" />
+                           </image>
+                        </ImageView>
+                        <JFXTabPane layoutX="212.0" layoutY="94.0" prefHeight="286.0" prefWidth="552.0">
+                           <tabs>
+                              <Tab id="stab" text="Info">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="265.0" prefWidth="552.0">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" layoutX="8.0" layoutY="8.0" prefHeight="157.0" prefWidth="535.0" text="{'XDP: XML Diff and Patch is a a tool built in Java that compares two XML documents (structure and content).\n\nThis Application is part of a project in Lebanese American University, Course:  Intelligent Data Processing and Applications (COE 543/743).\n\nThis Tool is built by Georgio Yammine and Rami Naffah.'}" textFill="#f8f8f1" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <ImageView fitHeight="43.0" fitWidth="51.0" layoutX="39.0" layoutY="169.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../githubw.png" />
+                                             </image>
+                                          </ImageView>
+                                          <Label alignment="TOP_LEFT" layoutX="90.0" layoutY="181.0" onMouseClicked="#copyHandle" prefHeight="24.0" prefWidth="423.0" text="https://github.com/georgioyammine/XDP-XML-Diff-and-Patch" textFill="#f8f8f1" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab id="stab" text="Settings">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <Label layoutX="30.0" layoutY="51.0" text="updateRootName " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="updateRootBox" focusColor="#ffff8d" layoutX="150.0" layoutY="38.0" prefHeight="25.0" prefWidth="38.0" />
+                                          <JFXButton fx:id="applyBtn" layoutX="231.0" layoutY="178.0" onAction="#applySettingsHandle" prefHeight="41.0" prefWidth="90.0" style="-fx-border-radius: 20;" text="Apply" />
+                                          <Label layoutX="229.0" layoutY="14.0" text="Changing Costs" textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="30.0" layoutY="88.0" text="insertContained " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="insertContainedBox" focusColor="#ffff8d" layoutX="150.0" layoutY="75.0" prefHeight="25.0" prefWidth="38.0" />
+                                          <Label layoutX="30.0" layoutY="121.0" text="deleteContained " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="deleteContainedBox" focusColor="#ffff8d" layoutX="150.0" layoutY="109.0" prefHeight="25.0" prefWidth="38.0" />
+                                          <Label layoutX="30.0" layoutY="156.0" text="deleteOrInsertLeaf " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="leafOpBox" focusColor="#ffff8d" layoutX="150.0" layoutY="143.0" prefHeight="25.0" prefWidth="38.0" />
+                                          <Label layoutX="358.0" layoutY="72.0" text="attributeNameCost " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="attrNameBox" focusColor="#ffff8d" layoutX="478.0" layoutY="59.0" prefHeight="25.0" prefWidth="38.0" />
+                                          <Label layoutX="358.0" layoutY="109.0" text="attributeValueCost " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="attrValBox" focusColor="#ffff8d" layoutX="478.0" layoutY="96.0" prefHeight="25.0" prefWidth="38.0" />
+                                          <Label layoutX="358.0" layoutY="142.0" text="textTokenCost " textFill="#f8f8f1">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="textTokenBox" focusColor="#ffff8d" layoutX="478.0" layoutY="130.0" prefHeight="25.0" prefWidth="38.0" />
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab id="stab" text="Help">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <Label alignment="TOP_LEFT" layoutX="14.0" layoutY="10.0" prefHeight="247.0" prefWidth="526.0" text="{'• Use Get Diff to perform comparison between XML A and B, select reversible to get A&lt;-&gt;&gt;B or unselect it to get A-&gt;B, The output file will be in the directory of the app and the absolute path will be printed at the bottom of the page.\n\n• Use Reverse Diff to reverse a reversible patch into the other direction (A&lt;-&gt;&gt;B =&gt; A&lt;&lt;-&gt;B), if a patch is not reversible, you will get an error message, otherwise you will get the absolute path of the file at the bottom of the page.\n\n• Use Apply Patch to patch doc A and (A-&gt;B or A&lt;-&gt;&gt;B) to get back document B. The absolute path will be displayed at the bottom of the page. A message will appear to confirm if the patch is successful by comparing Hash CheckSums.\n\n**All output files will be in the directory of the App**\n**Click on any path to copy it to the clipboard**'}" textFill="#f8f8f1" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </JFXTabPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+   </children>
+</AnchorPane>

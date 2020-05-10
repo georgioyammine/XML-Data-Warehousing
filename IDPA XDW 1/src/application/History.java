@@ -38,7 +38,7 @@ public class History  implements Serializable {
 	
 	public boolean pin(Project p) {
 		if(pinned.contains(p))
-			return false;
+			pinned.remove(p);
 		pinned.add(0, p);
 		if(pinned.size()>capacity) {
 			pinned.remove(capacity);

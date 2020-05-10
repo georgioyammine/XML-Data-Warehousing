@@ -13,7 +13,7 @@ public class ProjectData{
 		this.name = new SimpleStringProperty(p.getName());
 		this.path = new SimpleStringProperty(p.getPath());
 		this.author = new SimpleStringProperty(p.getAuthor());
-		File file = new File(path.get());
+		File file = new File(path.get()+File.separator+name.get()+".xdw");
 		Date date = new Date(file.lastModified());
 		this.dateMod = new SimpleStringProperty(date.toString());
 	}

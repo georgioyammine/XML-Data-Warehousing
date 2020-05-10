@@ -12,6 +12,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -695,9 +696,10 @@ public class dataWarehousingController {
 	private List<ChartData> getCalendarData() {
 		ZonedDateTime now = ZonedDateTime.now();
 		List<ChartData> calendarData = new ArrayList<ChartData>();
-
+		Date date = new Date(System.currentTimeMillis());
+		
 		for (int i = 0; i < project.versions.size(); i++) {
-			if(project.versions.get(i).getDateCreated().getMonth() == now.getMonthValue()) {
+			if(project.versions.get(i).getDateCreated().getMonth() == date.getMonth()) {
 			calendarData.add(new ChartData("Item " + (i + 1),
 					now.plusDays((long) (project.versions.get(i).getDateCreated().getDate()) - 1).toInstant()));
 			}

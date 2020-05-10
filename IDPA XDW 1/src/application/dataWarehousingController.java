@@ -4,13 +4,12 @@ import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.Guard;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -35,6 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.jfoenix.controls.JFXAutoCompletePopup;
 import com.jfoenix.controls.JFXButton;
@@ -52,7 +53,6 @@ import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.Tile.TextSize;
 import eu.hansolo.tilesfx.TileBuilder;
 import eu.hansolo.tilesfx.chart.ChartData;
-import eu.hansolo.tilesfx.chart.TilesFXSeries;
 import eu.hansolo.tilesfx.colors.Bright;
 import eu.hansolo.tilesfx.colors.Dark;
 import eu.hansolo.tilesfx.tools.FlowGridPane;
@@ -86,12 +86,11 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class dataWarehousingController {
@@ -122,7 +121,7 @@ public class dataWarehousingController {
 	TableColumn queryCol;
 	@FXML
 	JFXButton addVersion;
-	
+
 	@FXML
 	JFXButton queryBtn;
 	@FXML
@@ -169,17 +168,20 @@ public class dataWarehousingController {
 	private Tile homeTile;
 	private Tile addVersionTile;
 	private Tile numberTile;
-	private Tile            percentageTile;
-    private Tile            clockTile;
-    private Tile            gaugeTile;
-    private Tile            sparkLineTile;
-    private Tile            areaChartTile;
-    private Tile            lineChartTile;
-    private Tile            highLowTile;
-    private Tile            timerControlTile;
+	private Tile percentageTile;
+	private Tile clockTile;
+	private Tile gaugeTile;
+	private Tile sparkLineTile;
+	private Tile areaChartTile;
+	private Tile lineChartTile;
+	private Tile highLowTile;
+	private Tile timerControlTile;
+	private Tile nameTile;
+	private Tile authorTile;
+	private Tile xdpTile;
 
-	private final double TILE_WIDTH=300;
-	private final double TILE_HEIGHT=300;
+	private final double TILE_WIDTH = 300;
+	private final double TILE_HEIGHT = 300;
 	FlowGridPane pane;
 
 	JFXAutoCompletePopup<String> autoCompletePopup = new JFXAutoCompletePopup<>();
@@ -227,14 +229,14 @@ public class dataWarehousingController {
 			public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
 				final TableCell<Data, Void> cell = new TableCell<Data, Void>() {
 
-					private final Button btn = new Button("",new ImageView(new Image("images/download2.png", 20, 20, true, true)));
+					private final Button btn = new Button("",
+							new ImageView(new Image("images/download2.png", 20, 20, true, true)));
 
 					{
 						btn.setOnAction((ActionEvent event) -> {
 							try {
 								System.out.println("pressed");
-								getThisVersion(
-										getTableView().getItems().get(getIndex()).getVersion());
+								getThisVersion(getTableView().getItems().get(getIndex()).getVersion());
 
 							} catch (NumberFormatException e) {
 								// TODO Auto-generated catch block
@@ -270,7 +272,8 @@ public class dataWarehousingController {
 			public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
 				final TableCell<Data, Void> cell = new TableCell<Data, Void>() {
 
-					private final Button btn = new Button("",new ImageView(new Image("images/inspect.png", 20, 20, true, true)));
+					private final Button btn = new Button("",
+							new ImageView(new Image("images/inspect.png", 20, 20, true, true)));
 
 					{
 						btn.setOnAction((ActionEvent event) -> {
@@ -279,8 +282,7 @@ public class dataWarehousingController {
 							mainTabPane.getSelectionModel().select(2);
 
 							versionPath = projectPath + File.separator + "src" + File.separator + "available files"
-									+ File.separator + project.getName() + "_v" + data.getVersion()
-									+ ".xml";
+									+ File.separator + project.getName() + "_v" + data.getVersion() + ".xml";
 							System.out.println(versionPath);
 							versionBox.getSelectionModel().select(data.getVersion() - 1);
 							File xmlFile = new File(versionPath);
@@ -369,264 +371,221 @@ public class dataWarehousingController {
 		initializeHomeTile();
 		initializeVersionPane();
 		initializeNumberTile();
-		
-		
-		 percentageTile = TileBuilder.create()
-                 .skinType(SkinType.PERCENTAGE)
-                 .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                 .title("Percentage Tile")
-                 .unit("%")
-                 .description("Test")
-                 .maxValue(60)
-                 .build();
+		initializeInfo();
+		initializeXDPTile();
 
-clockTile = TileBuilder.create()
-            .skinType(SkinType.CLOCK)
-            .prefSize(TILE_WIDTH, TILE_HEIGHT)
-            .title("Clock Tile")
-            .text("Whatever text")
-            .dateVisible(true)
-            .locale(Locale.US)
-            .running(true)
-            .build();
+		percentageTile = TileBuilder.create().skinType(SkinType.PERCENTAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Percentage Tile").unit("%").description("Test").maxValue(60).build();
 
-gaugeTile = TileBuilder.create()
-            .skinType(SkinType.GAUGE)
-            .prefSize(TILE_WIDTH, TILE_HEIGHT)
-            .title("Gauge Tile")
-            .unit("V")
-            .threshold(75)
-            .build();
+		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile")
+				.text("Whatever text").dateVisible(true).locale(Locale.US).running(true).build();
 
-sparkLineTile = TileBuilder.create()
-                .skinType(SkinType.SPARK_LINE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("SparkLine Tile")
-                .unit("mb")
-                .gradientStops(new Stop(0, Tile.GREEN),
-                               new Stop(0.5, Tile.YELLOW),
-                               new Stop(1.0, Tile.RED))
-                .strokeWithGradient(true)
-                //.smoothing(true)
-                .build();
+		gaugeTile = TileBuilder.create().skinType(SkinType.GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Gauge Tile")
+				.unit("V").threshold(75).build();
 
-//sparkLineTile.valueProperty().bind(value);
+		sparkLineTile = TileBuilder.create().skinType(SkinType.SPARK_LINE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("SparkLine Tile").unit("mb")
+				.gradientStops(new Stop(0, Tile.GREEN), new Stop(0.5, Tile.YELLOW), new Stop(1.0, Tile.RED))
+				.strokeWithGradient(true)
+				// .smoothing(true)
+				.build();
 
-areaChartTile = TileBuilder.create()
-                .skinType(SkinType.SMOOTHED_CHART)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("SmoothedChart Tile")
-                .chartType(ChartType.AREA)
-                //.animated(true)
-                .smoothing(true)
-                .tooltipTimeout(1000)
-//                .tilesFxSeries(new TilesFXSeries<>(
-//                                            Tile.BLUE,
-//                                            new LinearGradient(0, 0, 0, 1,
-//                                                               true, CycleMethod.NO_CYCLE,
-//                                                               new Stop(0, Tile.BLUE),
-//                                                               new Stop(1, Color.TRANSPARENT))))
-                .build();
+		// sparkLineTile.valueProperty().bind(value);
 
-lineChartTile = TileBuilder.create()
-                .skinType(SkinType.SMOOTHED_CHART)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("SmoothedChart Tile")
-                //.animated(true)
-                .smoothing(false)
-//                .series(series2, series3)
-                .build();
+		areaChartTile = TileBuilder.create().skinType(SkinType.SMOOTHED_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("SmoothedChart Tile").chartType(ChartType.AREA)
+				// .animated(true)
+				.smoothing(true).tooltipTimeout(1000)
+				// .tilesFxSeries(new TilesFXSeries<>(
+				// Tile.BLUE,
+				// new LinearGradient(0, 0, 0, 1,
+				// true, CycleMethod.NO_CYCLE,
+				// new Stop(0, Tile.BLUE),
+				// new Stop(1, Color.TRANSPARENT))))
+				.build();
 
-highLowTile = TileBuilder.create()
-              .skinType(SkinType.HIGH_LOW)
-              .prefSize(TILE_WIDTH, TILE_HEIGHT)
-              .title("HighLow Tile")
-              .unit("\u20AC")
-              .description("Test")
-              .text("Whatever text")
-              .referenceValue(6.7)
-              .value(8.2)
-              .build();
+		lineChartTile = TileBuilder.create().skinType(SkinType.SMOOTHED_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("SmoothedChart Tile")
+				// .animated(true)
+				.smoothing(false)
+				// .series(series2, series3)
+				.build();
 
-timerControlTile = TileBuilder.create()
-                   .skinType(SkinType.TIMER_CONTROL)
-                   .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                   .title("TimerControl Tile")
-                   .text("Whatever text")
-                   .secondsVisible(true)
-                   .dateVisible(true)
-//                   .timeSections(timeSection)
-                   .running(true)
-                   .build();
+		highLowTile = TileBuilder.create().skinType(SkinType.HIGH_LOW).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("HighLow Tile").unit("\u20AC").description("Test").text("Whatever text").referenceValue(6.7)
+				.value(8.2).build();
 
-pane = new FlowGridPane(6, 3, storageTile,gitHubTile,directoryTile,calendarTile,homeTile,addVersionTile,
-		numberTile,percentageTile,clockTile,gaugeTile,sparkLineTile,areaChartTile,lineChartTile,highLowTile,timerControlTile);
-pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
-pane.setAlignment(Pos.CENTER);
-pane.setCenterShape(true);
-pane.setHgap(5);
-pane.setVgap(5);
-pane.setPadding(new Insets(5,5,5,5));
-pane.setBackground(new Background(new BackgroundFill(Color.web("#101214"), CornerRadii.EMPTY, Insets.EMPTY)));
-homeTab.getChildren().add(pane);
-System.out.println(homeTab.getPrefHeight());
-		
+		timerControlTile = TileBuilder.create().skinType(SkinType.TIMER_CONTROL).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("TimerControl Tile").text("Whatever text").secondsVisible(true).dateVisible(true)
+				// .timeSections(timeSection)
+				.running(true).build();
+
+		pane = new FlowGridPane(6, 3, storageTile, gitHubTile, directoryTile, calendarTile, homeTile, addVersionTile,
+				numberTile, percentageTile, clockTile, gaugeTile, sparkLineTile, areaChartTile, lineChartTile,
+				highLowTile, timerControlTile,nameTile,authorTile,xdpTile);
+		pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
+		pane.setAlignment(Pos.CENTER);
+		pane.setCenterShape(true);
+		pane.setHgap(5);
+		pane.setVgap(5);
+		pane.setPadding(new Insets(5, 5, 5, 5));
+		pane.setBackground(new Background(new BackgroundFill(Color.web("#101214"), CornerRadii.EMPTY, Insets.EMPTY)));
+		homeTab.getChildren().add(pane);
+		System.out.println(homeTab.getPrefHeight());
+
 		initializeTilePressed();
 		initializeBindings();
+
+
+	}
+
+	private void initializeXDPTile() {
+		xdpTile = TileBuilder.create()
+                .skinType(SkinType.IMAGE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("XML Diff and Patch App")
+                .image(new Image(("icon-main@3x.png")))
+                .textAlignment(TextAlignment.CENTER)
+                .build();
 
 	}
 
 	private void initializeBindings() {
 		mainTabPane.prefWidthProperty().bind(mainAnchor.widthProperty());
 		mainTabPane.prefHeightProperty().bind(mainAnchor.heightProperty());
-		
+
 		anchorUser.prefWidthProperty().bind(mainTabPane.widthProperty());
 		anchorUser.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
-		
+
 		homeTab.prefWidthProperty().bind(mainTabPane.widthProperty());
 		homeTab.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
-		
-		
+
 		pane.prefWidthProperty().bind(mainTabPane.widthProperty());
 		pane.prefHeightProperty().bind(mainTabPane.heightProperty().add(-60));
-		
+
 		tableview.prefWidthProperty().bind(mainTabPane.widthProperty());
 		tableview.prefHeightProperty().bind(mainTabPane.heightProperty().add(-57));
-		
-		dateCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
-				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
-		authorCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
-				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
-		sizeCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
-				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
-		diffCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
-				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
-		simCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
-				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
-		statCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
-				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
-		
+
+		dateCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty())
+				.subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		authorCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty())
+				.subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		sizeCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty())
+				.subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		diffCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty())
+				.subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		simCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty())
+				.subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		statCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty())
+				.subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+
 		queryTab.prefWidthProperty().bind(mainTabPane.widthProperty());
 		queryTab.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
-		
+
 		versionLabel.setLayoutX(0);
-		versionLabel.translateXProperty().bind(mainTabPane.widthProperty().multiply(59.0/800));
+		versionLabel.translateXProperty().bind(mainTabPane.widthProperty().multiply(59.0 / 800));
 
 		versionBox.setLayoutX(0);
-//		versionBox.setLayoutY(0);
+		// versionBox.setLayoutY(0);
 		versionBox.translateXProperty().bind(versionLabel.translateXProperty().add(80.0));
-//		versionBox.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(25.0/390));
-		
+		// versionBox.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(25.0/390));
+
 		deltaOnly.setLayoutX(0);
-//		deltaOnly.setLayoutY(0);
-		deltaOnly.translateXProperty().bind(mainTabPane.widthProperty().multiply(620.0/800));
-//		deltaOnly.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(0.0641));
-		
+		// deltaOnly.setLayoutY(0);
+		deltaOnly.translateXProperty().bind(mainTabPane.widthProperty().multiply(620.0 / 800));
+		// deltaOnly.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(0.0641));
+
 		advancedSearch.setLayoutX(0);
-//		advancedSearch.setLayoutY(0);
-		advancedSearch.translateXProperty().bind(mainTabPane.widthProperty().multiply(343.0/800));
-//		advancedSearch.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(12.0/390));
-		
+		// advancedSearch.setLayoutY(0);
+		advancedSearch.translateXProperty().bind(mainTabPane.widthProperty().multiply(343.0 / 800));
+		// advancedSearch.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(12.0/390));
+
 		filter1.setLayoutX(0);
-//		filter1.setLayoutY(0);
-		filter1.translateXProperty().bind(mainTabPane.widthProperty().multiply(30.0/800));
-		filter1.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
-//		filter1.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
-//		
-////		versionBox.setLayoutX(0);
-////		versionBox.setLayoutY(0);
-////		filter1.translateXProperty().bind(mainTabPane.widthProperty().multiply(30.0/800));
-////		filter1.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
-//		
+		// filter1.setLayoutY(0);
+		filter1.translateXProperty().bind(mainTabPane.widthProperty().multiply(30.0 / 800));
+		filter1.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0 / 800));
+		// filter1.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+		//
+		//// versionBox.setLayoutX(0);
+		//// versionBox.setLayoutY(0);
+		//// filter1.translateXProperty().bind(mainTabPane.widthProperty().multiply(30.0/800));
+		//// filter1.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+		//
 		filter2.setLayoutX(0);
-//		filter2.setLayoutY(0);
-		filter2.translateXProperty().bind(mainTabPane.widthProperty().multiply(165.0/800));
-		filter2.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
-//		filter2.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
-		
+		// filter2.setLayoutY(0);
+		filter2.translateXProperty().bind(mainTabPane.widthProperty().multiply(165.0 / 800));
+		filter2.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0 / 800));
+		// filter2.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+
 		filter3.setLayoutX(0);
-//		filter3.setLayoutY(0);
-		filter3.translateXProperty().bind(mainTabPane.widthProperty().multiply(301.0/800));
-		filter3.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
-//		filter3.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
-		
+		// filter3.setLayoutY(0);
+		filter3.translateXProperty().bind(mainTabPane.widthProperty().multiply(301.0 / 800));
+		filter3.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0 / 800));
+		// filter3.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+
 		filter4.setLayoutX(0);
-//		filter4.setLayoutY(0);
-		filter4.translateXProperty().bind(mainTabPane.widthProperty().multiply(437.0/800));
-		filter4.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
-//		filter4.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
-		
+		// filter4.setLayoutY(0);
+		filter4.translateXProperty().bind(mainTabPane.widthProperty().multiply(437.0 / 800));
+		filter4.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0 / 800));
+		// filter4.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+
 		searchBar.setLayoutX(0);
-//		searchBar.setLayoutY(0);
-		searchBar.translateXProperty().bind(mainTabPane.widthProperty().multiply(27.0/800));
-		searchBar.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(547.0/800));
-//		searchBar.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
-		
+		// searchBar.setLayoutY(0);
+		searchBar.translateXProperty().bind(mainTabPane.widthProperty().multiply(27.0 / 800));
+		searchBar.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(547.0 / 800));
+		// searchBar.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+
 		queryBtn.setLayoutX(0);
-//		queryBtn.setLayoutY(0);
-		queryBtn.translateXProperty().bind(mainTabPane.widthProperty().multiply(615.0/800));
-//		queryBtn.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(87.0/390));
-////		
-////		queryBtn.translateXProperty().bind(mainTabPane.widthProperty().multiply(615.0/800));
-////		queryBtn.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(87.0/390));
-////		
-//		queryResult.setLayoutX(0);
-//		queryResult.setLayoutY(0);
-//		queryResult.translateXProperty().bind(mainTabPane.widthProperty().multiply(20.0/800));
-//		queryResult.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(146.0/390));
-		
-		
-//		verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
-//		verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
-//		verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
-//		col
-		
-		
+		// queryBtn.setLayoutY(0);
+		queryBtn.translateXProperty().bind(mainTabPane.widthProperty().multiply(615.0 / 800));
+		// queryBtn.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(87.0/390));
+		////
+		//// queryBtn.translateXProperty().bind(mainTabPane.widthProperty().multiply(615.0/800));
+		//// queryBtn.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(87.0/390));
+		////
+		// queryResult.setLayoutX(0);
+		// queryResult.setLayoutY(0);
+		// queryResult.translateXProperty().bind(mainTabPane.widthProperty().multiply(20.0/800));
+		// queryResult.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(146.0/390));
+
+		// verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
+		// verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
+		// verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
+		// col
+
 		queryResult.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(38));
 		queryResult.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60).subtract(165));
-		
+
 	}
 
 	private void initializeNumberTile() {
-		  numberTile = TileBuilder.create()
-                  .skinType(SkinType.NUMBER)
-                  .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                  .title("Number of Versions")
-                  .textSize(TextSize.BIGGER)
-//                  .text("Whatever text")
-                  .value(13)
-//                  .unit("versions")
-                  .description("Versions")
-                  .textVisible(true)
-                  .build();
+		numberTile = TileBuilder.create().skinType(SkinType.NUMBER).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Number of Versions").textSize(TextSize.BIGGER)
+				// .text("Whatever text")
+				.value(project.versions.size())
+				// .unit("versions")
+				.description("Versions").textVisible(true).build();
 
 	}
 
 	public void initializeHomeTile() {
-		homeTile = TileBuilder.create()
-                .skinType(SkinType.IMAGE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Return to HomePage")
-                .textSize(TextSize.BIGGER)
-                .image(new Image("home1.png"))
-//                .backgroundColor(Color.TRANSPARENT)
-                .build();
+		homeTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Return to HomePage").textSize(TextSize.BIGGER).image(new Image("home1.png"))
+				// .backgroundColor(Color.TRANSPARENT)
+				.build();
 	}
+
 	public void initializeVersionPane() {
-		addVersionTile = TileBuilder.create()
-                .skinType(SkinType.IMAGE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Add New Version")
-                .textSize(TextSize.BIGGER)
-                .image(new Image("images/addVersion.png"))
-                .backgroundImageKeepAspect(true)
-//                .backgroundColor(Color.TRANSPARENT)
-                .build();
+		addVersionTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Add New Version").textSize(TextSize.BIGGER).image(new Image("images/addVersion.png"))
+				.backgroundImageKeepAspect(true)
+				// .backgroundColor(Color.TRANSPARENT)
+				.build();
 	}
 
 	public void initializeTilePressed() throws MalformedURLException {
 		URL url = new URL("https://github.com/georgioyammine/XML-Data-Warehousing");
-		directoryTile.setOnMouseClicked(event ->{
+		directoryTile.setOnMouseClicked(event -> {
 			try {
 				Desktop.getDesktop().browse(new File(projectPath).toURI());
 			} catch (IOException e) {
@@ -634,7 +593,7 @@ System.out.println(homeTab.getPrefHeight());
 			}
 			System.out.println(projectPath);
 		});
-		gitHubTile.setOnMouseClicked(event ->{
+		gitHubTile.setOnMouseClicked(event -> {
 			try {
 				Desktop.getDesktop().browse(url.toURI());
 			} catch (IOException | URISyntaxException e) {
@@ -642,7 +601,7 @@ System.out.println(homeTab.getPrefHeight());
 				e.printStackTrace();
 			}
 		});
-		homeTile.setOnMouseClicked(event ->{
+		homeTile.setOnMouseClicked(event -> {
 			try {
 				Parent root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
 				Scene scene = new Scene(root, 800, 450);
@@ -654,7 +613,7 @@ System.out.println(homeTab.getPrefHeight());
 				e.printStackTrace();
 			}
 		});
-		addVersionTile.setOnMouseClicked(event ->{
+		addVersionTile.setOnMouseClicked(event -> {
 			try {
 				addVersionHandler();
 			} catch (Exception e) {
@@ -662,90 +621,86 @@ System.out.println(homeTab.getPrefHeight());
 				e.printStackTrace();
 			}
 		});
+		xdpTile.setOnMouseClicked(event -> {
+			try {
+				Parent root = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
+				Scene scene = new Scene(root, 800, 450);
+				Stage window = (Stage) ((tableview.getScene().getWindow()));
+				window.setResizable(false);
+				window.setScene(scene);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
 	}
+
+	private void initializeInfo() {
+		nameTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Name")
+				.description( project.getName()).textSize(TextSize.BIGGER)
+				.descriptionAlignment(Pos.CENTER).textVisible(true).build();
+		authorTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Author")
+				.description( project.getOwner()).textSize(TextSize.BIGGER)
+				.descriptionAlignment(Pos.CENTER).textVisible(true).build();
+	}
+
 	private void initializeStoragePane() {
 
 		double spaceSaved = getSavedSpace();
-		storageTile = TileBuilder.create()
-                .skinType(SkinType.BAR_GAUGE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .minValue(0)
-                .maxValue(100)
-                .startFromZero(true)
-                .title("Space Saved")
-                .textSize(TextSize.BIGGER)
-                .value(spaceSaved)
-                .unit("%")
-                .gradientStops(new Stop(0, Bright.RED),
-                               new Stop(0.1, Bright.RED),
-                               new Stop(0.2, Bright.ORANGE_RED),
-                               new Stop(0.3, Bright.ORANGE),
-                               new Stop(0.4, Bright.YELLOW_ORANGE),
-                               new Stop(0.5, Bright.YELLOW),
-                               new Stop(0.6, Bright.GREEN_YELLOW),
-                               new Stop(0.7, Bright.GREEN),
-                               new Stop(0.8, Bright.BLUE_GREEN),
-                               new Stop(1.0, Dark.BLUE))
-                .strokeWithGradient(true)
-                .animated(true)
-                .build();
+		storageTile = TileBuilder.create().skinType(SkinType.BAR_GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).minValue(0)
+				.maxValue(100).startFromZero(true).title("Space Saved").textSize(TextSize.BIGGER).value(spaceSaved)
+				.unit("%")
+				.gradientStops(new Stop(0, Bright.RED), new Stop(0.1, Bright.RED), new Stop(0.2, Bright.ORANGE_RED),
+						new Stop(0.3, Bright.ORANGE), new Stop(0.4, Bright.YELLOW_ORANGE), new Stop(0.5, Bright.YELLOW),
+						new Stop(0.6, Bright.GREEN_YELLOW), new Stop(0.7, Bright.GREEN),
+						new Stop(0.8, Bright.BLUE_GREEN), new Stop(1.0, Dark.BLUE))
+				.strokeWithGradient(true).animated(true).build();
 		System.out.println(spaceSaved);
 	}
 
 	private double getSavedSpace() {
-		long originalSize = 0 ;
-		long directorySize = FileUtils.sizeOfDirectory(new File(projectPath)) -
-				FileUtils.sizeOfDirectory(new File(projectPath+File.separator+"output"));
-		for(Version v : project.versions)
-			originalSize+=v.getSizeInBytes();
-		double spaceSaved = (1 - (directorySize/(double)originalSize)) * 100;
+		long originalSize = 0;
+		long directorySize = FileUtils.sizeOfDirectory(new File(projectPath))
+				- FileUtils.sizeOfDirectory(new File(projectPath + File.separator + "output"));
+		for (Version v : project.versions)
+			originalSize += v.getSizeInBytes();
+		double spaceSaved = (1 - (directorySize / (double) originalSize)) * 100;
 		System.out.println("Directory Size" + directorySize);
-		System.out.println("Original Size: "+originalSize);
+		System.out.println("Original Size: " + originalSize);
 		return spaceSaved;
 	}
 
-
 	private void updateDirectoryPane() {
-		directoryTile = TileBuilder.create()
-                .skinType(SkinType.IMAGE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Open Project Directory")
-                .textSize(TextSize.BIGGER)
-                .image(new Image("folder2.png"))
-//                .backgroundColor(Color.TRANSPARENT)
-                .build();
+		directoryTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Open Project Directory").textSize(TextSize.BIGGER).image(new Image("folder2.png"))
+				// .backgroundColor(Color.TRANSPARENT)
+				.build();
 	}
+
 	private void updateGitHubPane() {
-		gitHubTile = TileBuilder.create()
-                .skinType(SkinType.IMAGE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Open GitHub")
-                .textSize(TextSize.BIGGER)
-                .image(new Image("githubw.png"))
-//                .backgroundColor(Color.TRANSPARENT)
-                .build();
+		gitHubTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Open GitHub").textSize(TextSize.BIGGER).image(new Image("githubw.png"))
+				// .backgroundColor(Color.TRANSPARENT)
+				.build();
 	}
 
 	private void initializeCalendarData() {
 		List<ChartData> calendarData = getCalendarData();
-		calendarTile = TileBuilder.create()
-                .skinType(SkinType.CALENDAR)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("Calendar")
-                .textSize(TextSize.BIGGER)
-                .chartData(calendarData)
-                .build();
+		calendarTile = TileBuilder.create().skinType(SkinType.CALENDAR).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Calendar").textSize(TextSize.BIGGER).chartData(calendarData).build();
 
 	}
-
 
 	private List<ChartData> getCalendarData() {
 		ZonedDateTime now = ZonedDateTime.now();
 		List<ChartData> calendarData = new ArrayList<ChartData>();
 
-		for(int i = 0; i<project.versions.size();i++) {
-			calendarData.add(new ChartData("Item " + (i+1),now.plusDays((long)(project.versions.get(i).getDateCreated().getDate())-1).toInstant()));
+		for (int i = 0; i < project.versions.size(); i++) {
+			if(project.versions.get(i).getDateCreated().getMonth() == now.getMonthValue()) {
+			calendarData.add(new ChartData("Item " + (i + 1),
+					now.plusDays((long) (project.versions.get(i).getDateCreated().getDate()) - 1).toInstant()));
+			}
 			System.out.println(project.versions.get(i).getDateCreated().getDate());
 		}
 		return calendarData;
@@ -878,18 +833,14 @@ System.out.println(homeTab.getPrefHeight());
 
 			possibleWordsSet = new HashSet<>();
 
-
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			String expression = "/*";
-			NodeList nodeList = (NodeList) xPath.compile(expression.toString()).evaluate(root,
-					XPathConstants.NODESET);
+			NodeList nodeList = (NodeList) xPath.compile(expression.toString()).evaluate(root, XPathConstants.NODESET);
 			for (int i = 0; i < nodeList.getLength(); i++)
-				possibleWordsSet.add("/"+nodeList.item(i).getNodeName());
+				possibleWordsSet.add("/" + nodeList.item(i).getNodeName());
 
 			for (int i = 0; i < nl.getLength(); i++)
 				possibleWordsSet.add("//" + nl.item(i).getNodeName());
-
-
 
 			autoCompletePopup.getSuggestions().addAll(possibleWordsSet);
 			autoCompletePopup.hide();
@@ -952,7 +903,7 @@ System.out.println(homeTab.getPrefHeight());
 
 	@FXML
 	public void versionBoxChanged() throws Exception {
-		if(versionBox.getValue()==null)
+		if (versionBox.getValue() == null)
 			return;
 		if ((int) versionBox.getValue() == 1) {
 			deltaOnly.setDisable(true);
@@ -997,7 +948,7 @@ System.out.println(homeTab.getPrefHeight());
 
 	@FXML
 	public void updateDropBoxes2() throws Exception {
-		if (filter1.getItems().isEmpty()){
+		if (filter1.getItems().isEmpty()) {
 			filter2.getItems().clear();
 			filter2.setVisible(false);
 			return;
@@ -1027,7 +978,7 @@ System.out.println(homeTab.getPrefHeight());
 
 	@FXML
 	public void updateDropBoxes3() throws Exception {
-		if (filter2.getItems().isEmpty()){
+		if (filter2.getItems().isEmpty()) {
 			filter3.getItems().clear();
 			filter3.setVisible(false);
 			return;
@@ -1189,6 +1140,8 @@ System.out.println(homeTab.getPrefHeight());
 					transformer.transform(source, result);
 					String xmlString = result.getWriter().toString();
 					queryResult.setText(xmlString.substring(55));
+					System.out.println("Hi");
+//					getTreeView(xmlString);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1205,65 +1158,65 @@ System.out.println(homeTab.getPrefHeight());
 
 				XPath xPath = XPathFactory.newInstance().newXPath();
 
-				NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(queryingVersionRoot, XPathConstants.NODESET);
+				NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(queryingVersionRoot,
+						XPathConstants.NODESET);
 				StringBuilder sb = new StringBuilder();
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					Node node = nodeList.item(i);
 					String dotRep = getDotPosition(node);
-					sb.append("//"+dotRep +" | " );
+					sb.append("//" + dotRep + " | ");
 
-//					System.out.println(node + " " + dotRep);
+					// System.out.println(node + " " + dotRep);
 				}
-				sb.delete(sb.length()-3, sb.length());
+				sb.delete(sb.length() - 3, sb.length());
 				System.out.println(sb.toString());
 
 				String diffPath = projectPath + File.separator + getDiffRelativePath((int) versionBox.getValue());
 				Node reversedDiff = XMLDiffAndPatch.reverseXMLESNode(diffPath);
-//				Util.print(reversedDiff, 0);
+				// Util.print(reversedDiff, 0);
 
 				Document newXmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 				Element root = newXmlDocument.createElement("Results");
-				if(!sb.toString().isEmpty()) {
+				if (!sb.toString().isEmpty()) {
 
-					Node updNode = (Node) xPath.compile("//Update").evaluate(reversedDiff,
-							XPathConstants.NODE);
-					if(updNode!=null) {
+					Node updNode = (Node) xPath.compile("//Update").evaluate(reversedDiff, XPathConstants.NODE);
+					if (updNode != null) {
 						Document updDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 						updDoc.appendChild(updDoc.importNode(updNode, true));
 						Node node = newXmlDocument.createElement("Update");
 						NodeList results = (NodeList) xPath.compile(sb.toString()).evaluate(updDoc,
 								XPathConstants.NODESET);
-						for(int i = 0;i<results.getLength();i++) {
-							node.appendChild(newXmlDocument.importNode(results.item(i),true));
+						for (int i = 0; i < results.getLength(); i++) {
+							node.appendChild(newXmlDocument.importNode(results.item(i), true));
 						}
-						root.appendChild(newXmlDocument.importNode(node,true));
+						root.appendChild(newXmlDocument.importNode(node, true));
 					}
-					Node delNode = (Node) xPath.compile("//Delete").evaluate(reversedDiff,
-							XPathConstants.NODE);
-					if(delNode!=null) {
+					Node delNode = (Node) xPath.compile("//Delete").evaluate(reversedDiff, XPathConstants.NODE);
+					if (delNode != null) {
 						Document updDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 						updDoc.appendChild(updDoc.importNode(delNode, true));
 						Node node = newXmlDocument.createElement("Delete");
 						NodeList results = (NodeList) xPath.compile(sb.toString()).evaluate(updDoc,
 								XPathConstants.NODESET);
-						for(int i = 0;i<results.getLength();i++) {
-							node.appendChild(newXmlDocument.importNode(results.item(i),true));
+						for (int i = 0; i < results.getLength(); i++) {
+							node.appendChild(newXmlDocument.importNode(results.item(i), true));
 						}
-						root.appendChild(newXmlDocument.importNode(node,true));
+						root.appendChild(newXmlDocument.importNode(node, true));
 					}
 				}
 
-//				NodeList nodeList2 = (NodeList) xPath.compile(sb.toString()).evaluate(reversedDiff, XPathConstants.NODESET);
-//				System.out.println(nodeList2.getLength());
+				// NodeList nodeList2 = (NodeList)
+				// xPath.compile(sb.toString()).evaluate(reversedDiff, XPathConstants.NODESET);
+				// System.out.println(nodeList2.getLength());
 
 				newXmlDocument.appendChild(root);
-//
-//				for (int i = 0; i < nodeList2.getLength(); i++) {
-//					Node node = nodeList2.item(i);
-//					Node copyNode = newXmlDocument.importNode(node, true);
-//					root.appendChild(copyNode);
-//					System.out.println("Node:"+node);
-//				}
+				//
+				// for (int i = 0; i < nodeList2.getLength(); i++) {
+				// Node node = nodeList2.item(i);
+				// Node copyNode = newXmlDocument.importNode(node, true);
+				// root.appendChild(copyNode);
+				// System.out.println("Node:"+node);
+				// }
 				Transformer transformer = TransformerFactory.newInstance().newTransformer();
 				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -1278,7 +1231,8 @@ System.out.println(homeTab.getPrefHeight());
 
 				XPath xPath = XPathFactory.newInstance().newXPath();
 
-				NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(queryingVersionRoot, XPathConstants.NODESET);
+				NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(queryingVersionRoot,
+						XPathConstants.NODESET);
 				System.out.println(nodeList.getLength());
 				Document newXmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 				Element root = newXmlDocument.createElement("Results");
@@ -1301,24 +1255,25 @@ System.out.println(homeTab.getPrefHeight());
 			}
 		}
 	}
+
 	public String getDotPosition(Node node) {
 		Stack<Node> stack = new Stack<Node>();
 
-		while(node.getParentNode()!=null) {
+		while (node.getParentNode() != null) {
 			stack.add(node);
 			node = node.getParentNode();
 		}
 		node = stack.pop();
 		StringBuilder sb = new StringBuilder("B");
-		while(!stack.isEmpty()) {
+		while (!stack.isEmpty()) {
 			System.out.println(node);
 			System.out.println(stack);
 			System.out.println(sb);
 			NodeList nodeList = node.getChildNodes();
-			for(int i = 0; i<nodeList.getLength();i++) {
-				if(nodeList.item(i).isEqualNode(stack.peek())) {
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				if (nodeList.item(i).isEqualNode(stack.peek())) {
 					node = stack.pop();
-					sb.append("." + (i+1));
+					sb.append("." + (i + 1));
 					break;
 				}
 			}
@@ -1369,17 +1324,22 @@ System.out.println(homeTab.getPrefHeight());
 	};
 	@FXML
 	JFXTabPane mainTabPane;
-	@FXML AnchorPane mainAnchor;
-	@FXML AnchorPane homeTab;
-	@FXML AnchorPane versionTab;
-	@FXML AnchorPane queryTab;
-	@FXML Label versionLabel;
+	@FXML
+	AnchorPane mainAnchor;
+	@FXML
+	AnchorPane homeTab;
+	@FXML
+	AnchorPane versionTab;
+	@FXML
+	AnchorPane queryTab;
+	@FXML
+	Label versionLabel;
 
 	private void updateInfo() {
 		// TODO Auto-generated method stub
-//		name.setText(project.getName());
-//		author.setText(project.getOwner());
-//		nbOfVersions.setText(project.versions.size() + "");
+		// name.setText(project.getName());
+		// author.setText(project.getOwner());
+		// nbOfVersions.setText(project.versions.size() + "");
 		ArrayList<Data> alist = new ArrayList<>();
 		ArrayList<Integer> arl = new ArrayList<>();
 		for (Version v : project.versions) {
@@ -1397,4 +1357,36 @@ System.out.println(homeTab.getPrefHeight());
 		project.save(projectPath + File.separator + project.getName() + ".xdw");
 	}
 
+	public void getTreeView(String result) {
+		Document xmlDoc = convertStringToXMLDocument(result);
+		Node root = (Node) xmlDoc.getElementsByTagName("Result");
+		NodeList nodeList = root.getChildNodes();
+		for(int i = 0;i<nodeList.getLength();i++)
+			System.out.println(nodeList.item(i).getNodeName());
+		System.out.println("Hi");
+	}
+	private static Document convertStringToXMLDocument(String xmlString)
+    {
+        //Parser that produces DOM object trees from XML content
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+        //API to obtain DOM Document instance
+        DocumentBuilder builder = null;
+        try
+        {
+            //Create DocumentBuilder with default configuration
+            builder = factory.newDocumentBuilder();
+
+            //Parse the content to Document object
+            Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
+            return doc;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
+
+

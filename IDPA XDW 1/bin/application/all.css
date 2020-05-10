@@ -82,3 +82,30 @@
     arrow__hover_color: text_hover_color;
     arrow_selected_hover_color: text_selected_color;
 }
+
+.scroll-bar:vertical {
+    thumb_color: #c2c7ca;
+    thumb_hover_color: #838689;
+    thumb_pressed_color: #585a5c;
+
+    track_color: #e9e9e9;
+
+    inc_dec_button_color: #e8e6e3;
+    inc_dec_button_hover_color: #c6cacf;
+    inc_dec_button_pressed_color: #585a5c;
+
+    arrow_color: #5a5a59;
+    arrow_pressed_color: white;
+}
+
+.scroll-pane {
+    corner_background_color: #e9e9e9;
+}
+.slider {
+    track_hover_color: #666666;
+    thumb_hover_color: #171717;
+
+    thumb_pressed_color: #cccccc;
+}
+
+}

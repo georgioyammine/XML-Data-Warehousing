@@ -19,13 +19,16 @@ package application;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.Tile.SkinType;
+import eu.hansolo.tilesfx.tools.FlowGridPane;
 import eu.hansolo.tilesfx.TileBuilder;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.EventType;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -106,11 +109,16 @@ public class TilesFXTest extends Application {
     }
 
     @Override public void start(Stage stage) {
-        TilePane pane = new TilePane(tile,tile2,tile3);
-        pane.setPrefSize(800, 800);
-  
+        FlowGridPane pane = new FlowGridPane(2,1,tile,tile2,tile3);
+        pane.setPrefSize(800, 600);
+        pane.setAlignment(Pos.CENTER);
+        pane.setCenterShape(true);
         Scene scene = new Scene(pane);
+        PerspectiveCamera camera = new PerspectiveCamera();
+        camera.setFieldOfView(10);
 
+        
+        scene.setCamera(camera);
         stage.setTitle("TilesFX Test");
         stage.setScene(scene);
         stage.show();

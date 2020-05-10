@@ -27,6 +27,9 @@
 
 @import "base.css";
 
+*{
+  background_color: #f3f3f3;
+}
 .root {
     background_color: #f3f3f3;
     scroll_pane_background_color: background_color;

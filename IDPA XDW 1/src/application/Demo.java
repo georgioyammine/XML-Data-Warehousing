@@ -96,7 +96,7 @@ public class Demo extends Application {
     private                 int    noOfNodes = 0;
 
     private DotMatrix dot;
-    
+
     private BarChartItem    barChartItem1;
     private BarChartItem    barChartItem2;
     private BarChartItem    barChartItem3;
@@ -170,14 +170,14 @@ public class Demo extends Application {
 
     private long            lastTimerCall;
     private AnimationTimer  timer;
-    private DoubleProperty  value;
+    
 
 
     @Override public void init() {
         long start = System.currentTimeMillis();
 
 
-        value = new SimpleDoubleProperty(0);
+//        value = new SimpleDoubleProperty(0);
 
         // AreaChart Data
         XYChart.Series<String, Number> series1 = new XYChart.Series();
@@ -366,11 +366,11 @@ public class Demo extends Application {
         numberTile = TileBuilder.create()
                                 .skinType(SkinType.NUMBER)
                                 .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                                .title("Number Tile")
-                                .text("Whatever text")
+                                .title("Number of Versions")
+//                                .text("Whatever text")
                                 .value(13)
-                                .unit("mb")
-                                .description("Test")
+//                                .unit("versions")
+                                .description("Versions")
                                 .textVisible(true)
                                 .build();
 
@@ -679,12 +679,17 @@ public class Demo extends Application {
                                             .prefSize(TILE_WIDTH, TILE_HEIGHT)
                                             .title("Character")
                                             .titleAlignment(TextAlignment.CENTER)
-                                            .description("G")
+                                            .description("10")
                                             .build();
+
+        String[] arr =  new String[105];
+        for(int i= 0; i<arr.length;i++) {
+        	arr[i]=""+i;
+        }
 
         flipTile      = TileBuilder.create().skinType(SkinType.FLIP)
                                             .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                                            .characters(Helper.TIME_0_TO_5)
+                                            .characters(arr)
                                             .flipTimeInMS(500)
                                             .flipText(" ")
                                             .build();
@@ -719,7 +724,7 @@ public class Demo extends Application {
                                   .prefSize(TILE_WIDTH, TILE_HEIGHT)
                                   .chartData(calendarData)
                                   .build();
-        
+
          dot = DotMatrixBuilder.create()
                 .prefSize(TILE_WIDTH*2, TILE_HEIGHT)
                 .colsAndRows(20, 7)
@@ -727,8 +732,8 @@ public class Demo extends Application {
                 .dotOffColor(Color.GRAY)
                 .dotShape(DotShape.ROUNDED_RECT)
                 .build();
-        
-//         dot = 
+
+//         dot =
 //         new DotMatrix(TILE_WIDTH*2, TILE_HEIGHT, 20, 7, Color.BLUE, Color.GRAY, DotShape.ROUNDED_RECT,null);
 
 //        TreeNode tree   = new TreeNode(new ChartData("ROOT"));
@@ -966,7 +971,8 @@ public class Demo extends Application {
 
                     characterTile.setDescription(Helper.ALPHANUMERIC[RND.nextInt(Helper.ALPHANUMERIC.length - 1)]);
 
-                    flipTile.setFlipText(Helper.TIME_0_TO_5[RND.nextInt(Helper.TIME_0_TO_5.length - 1)]);
+                    flipTile.setFlipText(105+"");
+//                    flipTile.flipTextProperty().
 
                     radialPercentageTile.setValue(chartData1.getValue());
 
@@ -1012,13 +1018,14 @@ public class Demo extends Application {
                                              flipTile, switchSliderTile, dateTile, calendarTile,
                                              matrixTile, radialPercentageTile, statusTile, barGaugeTile, imageTile
                                              ,radarChartTile1,radarChartTile2,dot );//, weatherTile);
+        				
 
         pane.setHgap(5);
         pane.setVgap(5);
         pane.setAlignment(Pos.CENTER);
         pane.setCenterShape(true);
         pane.setPadding(new Insets(5));
-        //pane.setPrefSize(800, 600);
+        pane.setPrefSize(800, 600);
         pane.setBackground(new Background(new BackgroundFill(Color.web("#101214"), CornerRadii.EMPTY, Insets.EMPTY)));
 
         PerspectiveCamera camera = new PerspectiveCamera();

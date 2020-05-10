@@ -1,14 +1,23 @@
 package application;
 
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Guard;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -20,6 +29,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,6 +45,17 @@ import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXTreeTableView;
 
+import eu.hansolo.tilesfx.Tile;
+import eu.hansolo.tilesfx.Tile.ChartType;
+import eu.hansolo.tilesfx.Tile.ImageMask;
+import eu.hansolo.tilesfx.Tile.SkinType;
+import eu.hansolo.tilesfx.Tile.TextSize;
+import eu.hansolo.tilesfx.TileBuilder;
+import eu.hansolo.tilesfx.chart.ChartData;
+import eu.hansolo.tilesfx.chart.TilesFXSeries;
+import eu.hansolo.tilesfx.colors.Bright;
+import eu.hansolo.tilesfx.colors.Dark;
+import eu.hansolo.tilesfx.tools.FlowGridPane;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,6 +63,11 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -50,10 +76,21 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Callback;
 
@@ -67,10 +104,6 @@ public class dataWarehousingController {
 	TreeTableColumn dateId;
 	@FXML
 	TableView tableview;
-	@FXML
-	TableColumn Col1;
-	@FXML
-	TableColumn Col2;
 	@FXML
 	TableColumn verCol;
 	@FXML
@@ -89,6 +122,9 @@ public class dataWarehousingController {
 	TableColumn queryCol;
 	@FXML
 	JFXButton addVersion;
+	
+	@FXML
+	JFXButton queryBtn;
 	@FXML
 	Label name;
 	@FXML
@@ -113,6 +149,38 @@ public class dataWarehousingController {
 	JFXTextField searchBar;
 	@FXML
 	JFXToggleButton advancedSearch;
+	@FXML
+	AnchorPane githubPane;
+	@FXML
+	AnchorPane directoryPane;
+	@FXML
+	AnchorPane storagePane;
+	@FXML
+	AnchorPane calendarPane;
+	@FXML
+	AnchorPane anchorUser;
+
+	private Tile gitHubTile;
+	private Tile directoryTile;
+	private Tile openProjectTile;
+	private Tile createProjectTile;
+	private Tile calendarTile;
+	private Tile storageTile;
+	private Tile homeTile;
+	private Tile addVersionTile;
+	private Tile numberTile;
+	private Tile            percentageTile;
+    private Tile            clockTile;
+    private Tile            gaugeTile;
+    private Tile            sparkLineTile;
+    private Tile            areaChartTile;
+    private Tile            lineChartTile;
+    private Tile            highLowTile;
+    private Tile            timerControlTile;
+
+	private final double TILE_WIDTH=300;
+	private final double TILE_HEIGHT=300;
+	FlowGridPane pane;
 
 	JFXAutoCompletePopup<String> autoCompletePopup = new JFXAutoCompletePopup<>();
 	ArrayList<String> words = new ArrayList<String>(); // Use to populate auto-completion search bar;
@@ -141,7 +209,7 @@ public class dataWarehousingController {
 	}
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws IOException {
 		searchBar.setVisible(false);
 
 		verCol.setCellValueFactory(new PropertyValueFactory<>("version"));
@@ -159,7 +227,7 @@ public class dataWarehousingController {
 			public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
 				final TableCell<Data, Void> cell = new TableCell<Data, Void>() {
 
-					private final Button btn = new Button("Get");
+					private final Button btn = new Button("",new ImageView(new Image("images/download2.png", 20, 20, true, true)));
 
 					{
 						btn.setOnAction((ActionEvent event) -> {
@@ -202,7 +270,7 @@ public class dataWarehousingController {
 			public TableCell<Data, Void> call(final TableColumn<Data, Void> param) {
 				final TableCell<Data, Void> cell = new TableCell<Data, Void>() {
 
-					private final Button btn = new Button("Query");
+					private final Button btn = new Button("",new ImageView(new Image("images/inspect.png", 20, 20, true, true)));
 
 					{
 						btn.setOnAction((ActionEvent event) -> {
@@ -230,21 +298,6 @@ public class dataWarehousingController {
 							setGraphic(btn);
 						}
 					}
-
-					// private void generateXPaths(File xmlFile, Node root) throws
-					// ParserConfigurationException, SAXException, IOException {
-					// DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-					// DocumentBuilder db = dbf.newDocumentBuilder();
-					// Document doc = db.parse(xmlFile);
-					//
-					// NodeList list = root.getChildNodes();
-					//
-					// for(int i = 0; i<list.getLength();i++) {
-					//
-					// }
-					//
-					// }
-
 				};
 				return cell;
 			}
@@ -258,9 +311,7 @@ public class dataWarehousingController {
 		filter4.setVisible(false);
 		queryResult.setEditable(false);
 		deltaOnly.setDisable(true);
-		// tableview.setItems(studentsModels);
 
-//		updateInitialSuggestions();
 		searchBar.setOnKeyReleased((KeyEvent e) -> {
 
 			switch (e.getCode()) {
@@ -311,7 +362,393 @@ public class dataWarehousingController {
 				autoCompletePopup.hide();
 			}
 		});
+		initializeStoragePane();
+		initializeCalendarData();
+		updateDirectoryPane();
+		updateGitHubPane();
+		initializeHomeTile();
+		initializeVersionPane();
+		initializeNumberTile();
+		
+		
+		 percentageTile = TileBuilder.create()
+                 .skinType(SkinType.PERCENTAGE)
+                 .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                 .title("Percentage Tile")
+                 .unit("%")
+                 .description("Test")
+                 .maxValue(60)
+                 .build();
 
+clockTile = TileBuilder.create()
+            .skinType(SkinType.CLOCK)
+            .prefSize(TILE_WIDTH, TILE_HEIGHT)
+            .title("Clock Tile")
+            .text("Whatever text")
+            .dateVisible(true)
+            .locale(Locale.US)
+            .running(true)
+            .build();
+
+gaugeTile = TileBuilder.create()
+            .skinType(SkinType.GAUGE)
+            .prefSize(TILE_WIDTH, TILE_HEIGHT)
+            .title("Gauge Tile")
+            .unit("V")
+            .threshold(75)
+            .build();
+
+sparkLineTile = TileBuilder.create()
+                .skinType(SkinType.SPARK_LINE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("SparkLine Tile")
+                .unit("mb")
+                .gradientStops(new Stop(0, Tile.GREEN),
+                               new Stop(0.5, Tile.YELLOW),
+                               new Stop(1.0, Tile.RED))
+                .strokeWithGradient(true)
+                //.smoothing(true)
+                .build();
+
+//sparkLineTile.valueProperty().bind(value);
+
+areaChartTile = TileBuilder.create()
+                .skinType(SkinType.SMOOTHED_CHART)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("SmoothedChart Tile")
+                .chartType(ChartType.AREA)
+                //.animated(true)
+                .smoothing(true)
+                .tooltipTimeout(1000)
+//                .tilesFxSeries(new TilesFXSeries<>(
+//                                            Tile.BLUE,
+//                                            new LinearGradient(0, 0, 0, 1,
+//                                                               true, CycleMethod.NO_CYCLE,
+//                                                               new Stop(0, Tile.BLUE),
+//                                                               new Stop(1, Color.TRANSPARENT))))
+                .build();
+
+lineChartTile = TileBuilder.create()
+                .skinType(SkinType.SMOOTHED_CHART)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("SmoothedChart Tile")
+                //.animated(true)
+                .smoothing(false)
+//                .series(series2, series3)
+                .build();
+
+highLowTile = TileBuilder.create()
+              .skinType(SkinType.HIGH_LOW)
+              .prefSize(TILE_WIDTH, TILE_HEIGHT)
+              .title("HighLow Tile")
+              .unit("\u20AC")
+              .description("Test")
+              .text("Whatever text")
+              .referenceValue(6.7)
+              .value(8.2)
+              .build();
+
+timerControlTile = TileBuilder.create()
+                   .skinType(SkinType.TIMER_CONTROL)
+                   .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                   .title("TimerControl Tile")
+                   .text("Whatever text")
+                   .secondsVisible(true)
+                   .dateVisible(true)
+//                   .timeSections(timeSection)
+                   .running(true)
+                   .build();
+
+pane = new FlowGridPane(6, 3, storageTile,gitHubTile,directoryTile,calendarTile,homeTile,addVersionTile,
+		numberTile,percentageTile,clockTile,gaugeTile,sparkLineTile,areaChartTile,lineChartTile,highLowTile,timerControlTile);
+pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
+pane.setAlignment(Pos.CENTER);
+pane.setCenterShape(true);
+pane.setHgap(5);
+pane.setVgap(5);
+pane.setPadding(new Insets(5,5,5,5));
+pane.setBackground(new Background(new BackgroundFill(Color.web("#101214"), CornerRadii.EMPTY, Insets.EMPTY)));
+homeTab.getChildren().add(pane);
+System.out.println(homeTab.getPrefHeight());
+		
+		initializeTilePressed();
+		initializeBindings();
+
+	}
+
+	private void initializeBindings() {
+		mainTabPane.prefWidthProperty().bind(mainAnchor.widthProperty());
+		mainTabPane.prefHeightProperty().bind(mainAnchor.heightProperty());
+		
+		anchorUser.prefWidthProperty().bind(mainTabPane.widthProperty());
+		anchorUser.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
+		
+		homeTab.prefWidthProperty().bind(mainTabPane.widthProperty());
+		homeTab.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
+		
+		
+		pane.prefWidthProperty().bind(mainTabPane.widthProperty());
+		pane.prefHeightProperty().bind(mainTabPane.heightProperty().add(-60));
+		
+		tableview.prefWidthProperty().bind(mainTabPane.widthProperty());
+		tableview.prefHeightProperty().bind(mainTabPane.heightProperty().add(-57));
+		
+		dateCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
+				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		authorCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
+				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		sizeCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
+				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		diffCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
+				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		simCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
+				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		statCol.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(verCol.widthProperty()).
+				subtract(getCol.widthProperty()).subtract(queryCol.widthProperty()).subtract(10).divide(6.1));
+		
+		queryTab.prefWidthProperty().bind(mainTabPane.widthProperty());
+		queryTab.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
+		
+		versionLabel.setLayoutX(0);
+		versionLabel.translateXProperty().bind(mainTabPane.widthProperty().multiply(59.0/800));
+
+		versionBox.setLayoutX(0);
+//		versionBox.setLayoutY(0);
+		versionBox.translateXProperty().bind(versionLabel.translateXProperty().add(80.0));
+//		versionBox.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(25.0/390));
+		
+		deltaOnly.setLayoutX(0);
+//		deltaOnly.setLayoutY(0);
+		deltaOnly.translateXProperty().bind(mainTabPane.widthProperty().multiply(620.0/800));
+//		deltaOnly.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(0.0641));
+		
+		advancedSearch.setLayoutX(0);
+//		advancedSearch.setLayoutY(0);
+		advancedSearch.translateXProperty().bind(mainTabPane.widthProperty().multiply(343.0/800));
+//		advancedSearch.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(12.0/390));
+		
+		filter1.setLayoutX(0);
+//		filter1.setLayoutY(0);
+		filter1.translateXProperty().bind(mainTabPane.widthProperty().multiply(30.0/800));
+		filter1.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
+//		filter1.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+//		
+////		versionBox.setLayoutX(0);
+////		versionBox.setLayoutY(0);
+////		filter1.translateXProperty().bind(mainTabPane.widthProperty().multiply(30.0/800));
+////		filter1.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+//		
+		filter2.setLayoutX(0);
+//		filter2.setLayoutY(0);
+		filter2.translateXProperty().bind(mainTabPane.widthProperty().multiply(165.0/800));
+		filter2.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
+//		filter2.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+		
+		filter3.setLayoutX(0);
+//		filter3.setLayoutY(0);
+		filter3.translateXProperty().bind(mainTabPane.widthProperty().multiply(301.0/800));
+		filter3.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
+//		filter3.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+		
+		filter4.setLayoutX(0);
+//		filter4.setLayoutY(0);
+		filter4.translateXProperty().bind(mainTabPane.widthProperty().multiply(437.0/800));
+		filter4.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(125.0/800));
+//		filter4.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+		
+		searchBar.setLayoutX(0);
+//		searchBar.setLayoutY(0);
+		searchBar.translateXProperty().bind(mainTabPane.widthProperty().multiply(27.0/800));
+		searchBar.prefWidthProperty().bind(mainTabPane.widthProperty().multiply(547.0/800));
+//		searchBar.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(81.0/390));
+		
+		queryBtn.setLayoutX(0);
+//		queryBtn.setLayoutY(0);
+		queryBtn.translateXProperty().bind(mainTabPane.widthProperty().multiply(615.0/800));
+//		queryBtn.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(87.0/390));
+////		
+////		queryBtn.translateXProperty().bind(mainTabPane.widthProperty().multiply(615.0/800));
+////		queryBtn.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(87.0/390));
+////		
+//		queryResult.setLayoutX(0);
+//		queryResult.setLayoutY(0);
+//		queryResult.translateXProperty().bind(mainTabPane.widthProperty().multiply(20.0/800));
+//		queryResult.translateYProperty().bind(mainTabPane.heightProperty().subtract(60).multiply(146.0/390));
+		
+		
+//		verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
+//		verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
+//		verCol.prefWidthProperty().bind(mainTabPane.widthProperty().divide(9));
+//		col
+		
+		
+		queryResult.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(38));
+		queryResult.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60).subtract(165));
+		
+	}
+
+	private void initializeNumberTile() {
+		  numberTile = TileBuilder.create()
+                  .skinType(SkinType.NUMBER)
+                  .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                  .title("Number of Versions")
+                  .textSize(TextSize.BIGGER)
+//                  .text("Whatever text")
+                  .value(13)
+//                  .unit("versions")
+                  .description("Versions")
+                  .textVisible(true)
+                  .build();
+
+	}
+
+	public void initializeHomeTile() {
+		homeTile = TileBuilder.create()
+                .skinType(SkinType.IMAGE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("Return to HomePage")
+                .textSize(TextSize.BIGGER)
+                .image(new Image("home1.png"))
+//                .backgroundColor(Color.TRANSPARENT)
+                .build();
+	}
+	public void initializeVersionPane() {
+		addVersionTile = TileBuilder.create()
+                .skinType(SkinType.IMAGE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("Add New Version")
+                .textSize(TextSize.BIGGER)
+                .image(new Image("images/addVersion.png"))
+                .backgroundImageKeepAspect(true)
+//                .backgroundColor(Color.TRANSPARENT)
+                .build();
+	}
+
+	public void initializeTilePressed() throws MalformedURLException {
+		URL url = new URL("https://github.com/georgioyammine/XML-Data-Warehousing");
+		directoryTile.setOnMouseClicked(event ->{
+			try {
+				Desktop.getDesktop().browse(new File(projectPath).toURI());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			System.out.println(projectPath);
+		});
+		gitHubTile.setOnMouseClicked(event ->{
+			try {
+				Desktop.getDesktop().browse(url.toURI());
+			} catch (IOException | URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		homeTile.setOnMouseClicked(event ->{
+			try {
+				Parent root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
+				Scene scene = new Scene(root, 800, 450);
+				Stage window = (Stage) ((tableview.getScene().getWindow()));
+				window.setResizable(false);
+				window.setScene(scene);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		addVersionTile.setOnMouseClicked(event ->{
+			try {
+				addVersionHandler();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
+	}
+	private void initializeStoragePane() {
+
+		double spaceSaved = getSavedSpace();
+		storageTile = TileBuilder.create()
+                .skinType(SkinType.BAR_GAUGE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .minValue(0)
+                .maxValue(100)
+                .startFromZero(true)
+                .title("Space Saved")
+                .textSize(TextSize.BIGGER)
+                .value(spaceSaved)
+                .unit("%")
+                .gradientStops(new Stop(0, Bright.RED),
+                               new Stop(0.1, Bright.RED),
+                               new Stop(0.2, Bright.ORANGE_RED),
+                               new Stop(0.3, Bright.ORANGE),
+                               new Stop(0.4, Bright.YELLOW_ORANGE),
+                               new Stop(0.5, Bright.YELLOW),
+                               new Stop(0.6, Bright.GREEN_YELLOW),
+                               new Stop(0.7, Bright.GREEN),
+                               new Stop(0.8, Bright.BLUE_GREEN),
+                               new Stop(1.0, Dark.BLUE))
+                .strokeWithGradient(true)
+                .animated(true)
+                .build();
+		System.out.println(spaceSaved);
+	}
+
+	private double getSavedSpace() {
+		long originalSize = 0 ;
+		long directorySize = FileUtils.sizeOfDirectory(new File(projectPath)) -
+				FileUtils.sizeOfDirectory(new File(projectPath+File.separator+"output"));
+		for(Version v : project.versions)
+			originalSize+=v.getSizeInBytes();
+		double spaceSaved = (1 - (directorySize/(double)originalSize)) * 100;
+		System.out.println("Directory Size" + directorySize);
+		System.out.println("Original Size: "+originalSize);
+		return spaceSaved;
+	}
+
+
+	private void updateDirectoryPane() {
+		directoryTile = TileBuilder.create()
+                .skinType(SkinType.IMAGE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("Open Project Directory")
+                .textSize(TextSize.BIGGER)
+                .image(new Image("folder2.png"))
+//                .backgroundColor(Color.TRANSPARENT)
+                .build();
+	}
+	private void updateGitHubPane() {
+		gitHubTile = TileBuilder.create()
+                .skinType(SkinType.IMAGE)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("Open GitHub")
+                .textSize(TextSize.BIGGER)
+                .image(new Image("githubw.png"))
+//                .backgroundColor(Color.TRANSPARENT)
+                .build();
+	}
+
+	private void initializeCalendarData() {
+		List<ChartData> calendarData = getCalendarData();
+		calendarTile = TileBuilder.create()
+                .skinType(SkinType.CALENDAR)
+                .prefSize(TILE_WIDTH, TILE_HEIGHT)
+                .title("Calendar")
+                .textSize(TextSize.BIGGER)
+                .chartData(calendarData)
+                .build();
+
+	}
+
+
+	private List<ChartData> getCalendarData() {
+		ZonedDateTime now = ZonedDateTime.now();
+		List<ChartData> calendarData = new ArrayList<ChartData>();
+
+		for(int i = 0; i<project.versions.size();i++) {
+			calendarData.add(new ChartData("Item " + (i+1),now.plusDays((long)(project.versions.get(i).getDateCreated().getDate())-1).toInstant()));
+			System.out.println(project.versions.get(i).getDateCreated().getDate());
+		}
+		return calendarData;
 	}
 
 	@FXML
@@ -438,22 +875,22 @@ public class dataWarehousingController {
 			autoCompletePopup.getSuggestions().clear();
 			Element root = queryingVersionRoot;
 			NodeList nl = root.getElementsByTagName("*");
-			
+
 			possibleWordsSet = new HashSet<>();
-			
+
 
 			XPath xPath = XPathFactory.newInstance().newXPath();
 			String expression = "/*";
 			NodeList nodeList = (NodeList) xPath.compile(expression.toString()).evaluate(root,
 					XPathConstants.NODESET);
-			for (int i = 0; i < nodeList.getLength(); i++) 
+			for (int i = 0; i < nodeList.getLength(); i++)
 				possibleWordsSet.add("/"+nodeList.item(i).getNodeName());
-			
+
 			for (int i = 0; i < nl.getLength(); i++)
 				possibleWordsSet.add("//" + nl.item(i).getNodeName());
-			
-			
-			
+
+
+
 			autoCompletePopup.getSuggestions().addAll(possibleWordsSet);
 			autoCompletePopup.hide();
 			autoCompletePopup.show(searchBar);
@@ -501,12 +938,6 @@ public class dataWarehousingController {
 		}
 	}
 
-	// add your data here from any source
-	// private ObservableList<Data> studentsModels =
-	// FXCollections.observableArrayList(
-	// new Data("7", "24/04/2020", "15 kbs", "10 kbs", "51,66%", "Available"),
-	// new Data("7", "14/03/2020", "30 kbs", "15 kbs", "60%", "Not Available"),
-	// new Data("7", "14/03/2020", "30 kbs", "15 kbs", "60%", "Not Available"));
 	@FXML
 	TableColumn authorCol;
 
@@ -566,8 +997,11 @@ public class dataWarehousingController {
 
 	@FXML
 	public void updateDropBoxes2() throws Exception {
-		if (filter1.getItems().isEmpty())
+		if (filter1.getItems().isEmpty()){
+			filter2.getItems().clear();
+			filter2.setVisible(false);
 			return;
+		}
 		filter2.getItems().clear();
 		filter2.setVisible(false);
 		if (deltaOnly.isSelected()) {
@@ -593,8 +1027,11 @@ public class dataWarehousingController {
 
 	@FXML
 	public void updateDropBoxes3() throws Exception {
-		if (filter2.getItems().isEmpty())
+		if (filter2.getItems().isEmpty()){
+			filter3.getItems().clear();
+			filter3.setVisible(false);
 			return;
+		}
 		filter3.getItems().clear();
 		filter3.setVisible(false);
 		if (deltaOnly.isSelected()) {
@@ -618,8 +1055,11 @@ public class dataWarehousingController {
 
 	@FXML
 	public void updateDropBoxes4() throws Exception {
-		if (filter3.getItems().isEmpty())
+		if (filter3.getItems().isEmpty()) {
+			filter4.getItems().clear();
+			filter4.setVisible(false);
 			return;
+		}
 		filter4.getItems().clear();
 		filter4.setVisible(false);
 		if (deltaOnly.isSelected()) {
@@ -776,7 +1216,7 @@ public class dataWarehousingController {
 				}
 				sb.delete(sb.length()-3, sb.length());
 				System.out.println(sb.toString());
-				
+
 				String diffPath = projectPath + File.separator + getDiffRelativePath((int) versionBox.getValue());
 				Node reversedDiff = XMLDiffAndPatch.reverseXMLESNode(diffPath);
 //				Util.print(reversedDiff, 0);
@@ -784,7 +1224,7 @@ public class dataWarehousingController {
 				Document newXmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 				Element root = newXmlDocument.createElement("Results");
 				if(!sb.toString().isEmpty()) {
-					
+
 					Node updNode = (Node) xPath.compile("//Update").evaluate(reversedDiff,
 							XPathConstants.NODE);
 					if(updNode!=null) {
@@ -812,10 +1252,10 @@ public class dataWarehousingController {
 						root.appendChild(newXmlDocument.importNode(node,true));
 					}
 				}
-				
+
 //				NodeList nodeList2 = (NodeList) xPath.compile(sb.toString()).evaluate(reversedDiff, XPathConstants.NODESET);
 //				System.out.println(nodeList2.getLength());
-				
+
 				newXmlDocument.appendChild(root);
 //
 //				for (int i = 0; i < nodeList2.getLength(); i++) {
@@ -901,6 +1341,7 @@ public class dataWarehousingController {
 			// project.addNewVersion(project.getOwner(), file.getAbsolutePath());
 
 		}
+
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -916,6 +1357,9 @@ public class dataWarehousingController {
 					Platform.runLater(() -> {
 						saveVersion();
 						updateInfo();
+						storageTile.setValue(getSavedSpace());
+						calendarTile.setChartData(getCalendarData());
+						numberTile.setValue(project.getNumberOfVersions());
 					});
 					return null;
 
@@ -925,12 +1369,17 @@ public class dataWarehousingController {
 	};
 	@FXML
 	JFXTabPane mainTabPane;
+	@FXML AnchorPane mainAnchor;
+	@FXML AnchorPane homeTab;
+	@FXML AnchorPane versionTab;
+	@FXML AnchorPane queryTab;
+	@FXML Label versionLabel;
 
 	private void updateInfo() {
 		// TODO Auto-generated method stub
-		name.setText(project.getName());
-		author.setText(project.getOwner());
-		nbOfVersions.setText(project.versions.size() + "");
+//		name.setText(project.getName());
+//		author.setText(project.getOwner());
+//		nbOfVersions.setText(project.versions.size() + "");
 		ArrayList<Data> alist = new ArrayList<>();
 		ArrayList<Integer> arl = new ArrayList<>();
 		for (Version v : project.versions) {

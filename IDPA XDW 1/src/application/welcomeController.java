@@ -89,19 +89,19 @@ public class welcomeController {
 //			ex.printStackTrace();
 			history = new History(historyCapacity);
 		}
-		
+
 		final History historyFinal = history;
-		
+
 		RecentNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		RecentAuthorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		RecentDirCol.setCellValueFactory(new PropertyValueFactory<>("path"));
 		RecentModCol.setCellValueFactory(new PropertyValueFactory<>("LastModified"));
-		
+
 		PinnedNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 		PinnedAuthorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
 		PinnedDirCol.setCellValueFactory(new PropertyValueFactory<>("path"));
 		PinnedModCol.setCellValueFactory(new PropertyValueFactory<>("LastModified"));
-		
+
 		Callback<TableColumn<ProjectData, Void>, TableCell<ProjectData, Void>> cellFactoryPin = new Callback<TableColumn<ProjectData, Void>, TableCell<ProjectData, Void>>() {
 			@Override
 			public TableCell<ProjectData, Void> call(final TableColumn<ProjectData, Void> param) {
@@ -132,12 +132,12 @@ public class welcomeController {
 			}
 		};
 		RecentPinCol.setCellFactory(cellFactoryPin);
-		
+
 		Callback<TableColumn<ProjectData, Void>, TableCell<ProjectData, Void>> cellFactoryUnpin = new Callback<TableColumn<ProjectData, Void>, TableCell<ProjectData, Void>>() {
 			@Override
 			public TableCell<ProjectData, Void> call(final TableColumn<ProjectData, Void> param) {
 				final TableCell<ProjectData, Void> cell = new TableCell<ProjectData, Void>() {
-					
+
 					private final Button btn = new Button("",new ImageView(new Image("unpin.png", 20, 20, true, true)));
 					{
 						btn.setOnAction((ActionEvent event) -> {
@@ -162,14 +162,14 @@ public class welcomeController {
 			}
 		};
 		PinnedUnpinCol.setCellFactory(cellFactoryUnpin);
-		
+
 		ArrayList<ProjectData> recentArr = new ArrayList<>();
 		for(Project p:history.getRecent()) {
 			recentArr.add(new ProjectData(p));
 		}
 		ObservableList<ProjectData> recentList = FXCollections.observableArrayList(recentArr);
 		recentTable.setItems(recentList);
-		
+
 		updatePinned();
 		pinnedTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 		    if (newSelection != null) {
@@ -185,7 +185,7 @@ public class welcomeController {
 		recentTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 		    if (newSelection != null) {
 		    	try {
-		    		
+
 					handleOpenProject(((ProjectData)newSelection).getPath()+File.separator+((ProjectData)newSelection).getName()+".xdw");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -247,8 +247,8 @@ public class welcomeController {
 			String availableFiles = dirPath.getText() + File.separator + nameId.getText().trim() + File.separator
 					+ "src" + File.separator + "available files";
 			new File(availableFiles).mkdirs();
-			
-			history.addToRecent(new Project(project.getName(),dirPath.getText(), project.getOwner()));
+
+			history.addToRecent(new Project(project.getName(),dirPath.getText() + File.separator + nameId.getText().trim(), project.getOwner()));
 			String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 			String filename = currentPath+ File.separator + "history.cfg";
 			history.save(filename);
@@ -259,7 +259,7 @@ public class welcomeController {
 			Parent root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
 			Scene scene = new Scene(root, 800, 450);
 			Stage window = (Stage) (((Node) event.getSource()).getScene().getWindow());
-			window.setResizable(false);
+			window.setResizable(true);
 			window.setScene(scene);
 
 		}
@@ -274,8 +274,8 @@ public class welcomeController {
 		verified &= authorId.getText()!="";
 		return verified;
 	}
-	
-	
+
+
 
 	@FXML
 	public void handleOpenProject(ActionEvent event) throws IOException {
@@ -284,10 +284,12 @@ public class welcomeController {
 		fil_chooser.setInitialDirectory(new File(currentPath));
 		fil_chooser.getExtensionFilters().add(new ExtensionFilter("XML Data Warehousing", "*xdw"));
 		file = fil_chooser.showOpenDialog(null);
-		handleOpenProject(file.getAbsolutePath());
-		
+		try {
+			handleOpenProject(file.getAbsolutePath());
+		} catch(NullPointerException e) {};
+
 	}
-	
+
 	public void handleOpenProject(String path) throws IOException{
 		File file = new File(path);
 
@@ -301,14 +303,14 @@ public class welcomeController {
 			String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 			String filename = currentPath+ File.separator + "history.cfg";
 			history.save(filename);
-			
+
 			// Main.classes.pop();
 			Parent root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
-			
+
 			Scene scene = new Scene(root, 800, 450);
 //			new JMetro(scene, Style.DARK);
 			Stage window = (Stage) (recentTable.getScene().getWindow());
-			window.setResizable(false);
+			window.setResizable(true);
 			window.setScene(scene);
 		}
 	}

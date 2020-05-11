@@ -89,6 +89,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Stop;
+import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -701,6 +702,8 @@ public class dataWarehousingController {
 				.backgroundImage(new Image("images" + File.separator + "user.png"))
 				.backgroundImageOpacity(0.5)
 				.descriptionAlignment(Pos.CENTER)
+				.customFont(new Font(100))
+				.customFontEnabled(true)
 				.textVisible(true).build();
 	}
 

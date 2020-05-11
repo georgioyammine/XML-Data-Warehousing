@@ -170,7 +170,7 @@ public class Demo extends Application {
 
     private long            lastTimerCall;
     private AnimationTimer  timer;
-    
+
 
 
     @Override public void init() {
@@ -930,7 +930,7 @@ public class Demo extends Application {
         lastTimerCall = System.nanoTime();
         timer = new AnimationTimer() {
             @Override public void handle(long now) {
-                if (now > lastTimerCall + 3_500_000_000L) {
+                if (now > lastTimerCall + 3_500_000_0000L) {
                     percentageTile.setValue(RND.nextDouble() * percentageTile.getRange() * 1.5 + percentageTile.getMinValue());
                     gaugeTile.setValue(RND.nextDouble() * gaugeTile.getRange() * 1.5 + gaugeTile.getMinValue());
 
@@ -1018,7 +1018,7 @@ public class Demo extends Application {
                                              flipTile, switchSliderTile, dateTile, calendarTile,
                                              matrixTile, radialPercentageTile, statusTile, barGaugeTile, imageTile
                                              ,radarChartTile1,radarChartTile2,dot );//, weatherTile);
-        				
+
 
         pane.setHgap(5);
         pane.setVgap(5);

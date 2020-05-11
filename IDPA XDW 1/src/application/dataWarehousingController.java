@@ -10,12 +10,12 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Stack;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -49,7 +49,6 @@ import com.jfoenix.controls.JFXTreeTableView;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.Tile.ChartType;
-import eu.hansolo.tilesfx.Tile.ImageMask;
 import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.Tile.TextSize;
 import eu.hansolo.tilesfx.TileBuilder;
@@ -180,6 +179,8 @@ public class dataWarehousingController {
 	private Tile nameTile;
 	private Tile authorTile;
 	private Tile xdpTile;
+	private Tile dayTile;
+	private Tile matrixTile;
 
 	private final double TILE_WIDTH = 300;
 	private final double TILE_HEIGHT = 300;
@@ -365,6 +366,7 @@ public class dataWarehousingController {
 				autoCompletePopup.hide();
 			}
 		});
+
 		initializeStoragePane();
 		initializeCalendarData();
 		updateDirectoryPane();
@@ -374,12 +376,14 @@ public class dataWarehousingController {
 		initializeNumberTile();
 		initializeInfo();
 		initializeXDPTile();
+		initializeDayTile();
+		initializeMatrixTile();
 
 		percentageTile = TileBuilder.create().skinType(SkinType.PERCENTAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Percentage Tile").unit("%").description("Test").maxValue(60).build();
 
 		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile")
-				.text("Whatever text").dateVisible(true).locale(Locale.US).running(true).build();
+				.running(true).build();
 
 		gaugeTile = TileBuilder.create().skinType(SkinType.GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Gauge Tile")
 				.unit("V").threshold(75).build();
@@ -421,9 +425,9 @@ public class dataWarehousingController {
 				// .timeSections(timeSection)
 				.running(true).build();
 
-		pane = new FlowGridPane(6, 3, storageTile, gitHubTile, directoryTile, calendarTile, homeTile, addVersionTile,
-				numberTile, percentageTile, clockTile, gaugeTile, sparkLineTile, areaChartTile, lineChartTile,
-				highLowTile, timerControlTile,nameTile,authorTile,xdpTile);
+		pane = new FlowGridPane(6, 3, matrixTile, clockTile,numberTile, storageTile, directoryTile, calendarTile, homeTile, addVersionTile,
+										 nameTile, authorTile ,gaugeTile, sparkLineTile, dayTile,
+										lineChartTile, highLowTile,timerControlTile,xdpTile,gitHubTile);
 		pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
 		pane.setAlignment(Pos.CENTER);
 		pane.setCenterShape(true);
@@ -436,18 +440,62 @@ public class dataWarehousingController {
 
 		initializeTilePressed();
 		initializeBindings();
+		System.out.println(tableview.getScene());
+		Platform.runLater(()->{
+		tableview.getScene().widthProperty().addListener((obs, oldVal, newVal) -> {
+			if (matrixTile != null)
+				matrixTile.setChartData(getWeeklyData());
+		});
 
+		tableview.getScene().heightProperty().addListener((obs, oldVal, newVal) -> {
+			if (matrixTile != null)
+				matrixTile.setChartData(getWeeklyData());
+		});
+		});
+
+	}
+
+	private void initializeMatrixTile() {
+		matrixTile = TileBuilder.create().skinType(SkinType.MATRIX).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("MatrixTileSkin").text("Any Text").textVisible(false).animated(true).matrixSize(8, 20)
+				.chartData(getWeeklyData()).maxValue(20).build();
+
+	}
+
+	private ArrayList<ChartData> getWeeklyData() {
+		int[] count = new int[8];
+		ArrayList<ChartData> weeklyData = new ArrayList<ChartData>();
+		ArrayList<Version> v = project.versions;
+		Date date = new Date(System.currentTimeMillis());
+		for (int i = v.size() - 1; i >= 0; i--) {
+			if (v.get(i).getDateCreated().getMonth() == date.getMonth()
+					&& v.get(i).getDateCreated().getDate() >= date.getDate() - 7
+					&& v.get(i).getDateCreated().getDate() <= date.getDate()
+					&& v.get(i).getDateCreated().getYear() == date.getYear()) {
+				count[7 - (date.getDate() - v.get(i).getDateCreated().getDate())]++;
+			} else
+				break;
+
+		}
+		for (int i = 0; i < count.length; i++) {
+			LocalDate date1 = LocalDate.now().minusDays(7-i);
+			ChartData newData = new ChartData(date1.getMonth().toString() + ", " + date1.getDayOfMonth(), count[i], Tile.BLUE);
+			newData.setValue(count[i]);
+			weeklyData.add(newData);
+		}
+		return weeklyData;
+
+	}
+
+	private void initializeDayTile() {
+		dayTile = TileBuilder.create().skinType(SkinType.DATE).prefSize(TILE_WIDTH, TILE_HEIGHT).build();
 
 	}
 
 	private void initializeXDPTile() {
-		xdpTile = TileBuilder.create()
-                .skinType(SkinType.IMAGE)
-                .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                .title("XML Diff and Patch App")
-                .image(new Image(("icon-main@3x.png")))
-                .textAlignment(TextAlignment.CENTER)
-                .build();
+		xdpTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("XML Diff and Patch App").image(new Image(("icon-main@3x.png")))
+				.textAlignment(TextAlignment.CENTER).build();
 
 	}
 
@@ -639,10 +687,10 @@ public class dataWarehousingController {
 
 	private void initializeInfo() {
 		nameTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Name")
-				.description( project.getName()).textSize(TextSize.BIGGER)
-				.descriptionAlignment(Pos.CENTER).textVisible(true).build();
-		authorTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Author")
-				.description( project.getOwner()).textSize(TextSize.BIGGER)
+				.description(project.getName()).textSize(TextSize.BIGGER).descriptionAlignment(Pos.CENTER)
+				.textVisible(true).build();
+		authorTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Project Author").description(project.getOwner()).textSize(TextSize.BIGGER)
 				.descriptionAlignment(Pos.CENTER).textVisible(true).build();
 	}
 
@@ -697,11 +745,12 @@ public class dataWarehousingController {
 		ZonedDateTime now = ZonedDateTime.now();
 		List<ChartData> calendarData = new ArrayList<ChartData>();
 		Date date = new Date(System.currentTimeMillis());
-		
+		System.out.println(date.getDay());
+
 		for (int i = 0; i < project.versions.size(); i++) {
-			if(project.versions.get(i).getDateCreated().getMonth() == date.getMonth()) {
-			calendarData.add(new ChartData("Item " + (i + 1),
-					now.plusDays((long) (project.versions.get(i).getDateCreated().getDate()) - 1).toInstant()));
+			if (project.versions.get(i).getDateCreated().getMonth() == date.getMonth()) {
+				calendarData.add(new ChartData("Item " + (i + 1),
+						now.plusDays((long) (project.versions.get(i).getDateCreated().getDate()) - 1).toInstant()));
 			}
 			System.out.println(project.versions.get(i).getDateCreated().getDate());
 		}
@@ -1143,7 +1192,7 @@ public class dataWarehousingController {
 					String xmlString = result.getWriter().toString();
 					queryResult.setText(xmlString.substring(55));
 					System.out.println("Hi");
-//					getTreeView(xmlString);
+					// getTreeView(xmlString);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1363,32 +1412,27 @@ public class dataWarehousingController {
 		Document xmlDoc = convertStringToXMLDocument(result);
 		Node root = (Node) xmlDoc.getElementsByTagName("Result");
 		NodeList nodeList = root.getChildNodes();
-		for(int i = 0;i<nodeList.getLength();i++)
+		for (int i = 0; i < nodeList.getLength(); i++)
 			System.out.println(nodeList.item(i).getNodeName());
 		System.out.println("Hi");
 	}
-	private static Document convertStringToXMLDocument(String xmlString)
-    {
-        //Parser that produces DOM object trees from XML content
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-        //API to obtain DOM Document instance
-        DocumentBuilder builder = null;
-        try
-        {
-            //Create DocumentBuilder with default configuration
-            builder = factory.newDocumentBuilder();
+	private static Document convertStringToXMLDocument(String xmlString) {
+		// Parser that produces DOM object trees from XML content
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-            //Parse the content to Document object
-            Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
-            return doc;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
+		// API to obtain DOM Document instance
+		DocumentBuilder builder = null;
+		try {
+			// Create DocumentBuilder with default configuration
+			builder = factory.newDocumentBuilder();
+
+			// Parse the content to Document object
+			Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
+			return doc;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
-
-

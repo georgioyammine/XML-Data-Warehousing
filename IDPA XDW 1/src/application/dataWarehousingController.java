@@ -46,9 +46,11 @@ import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXTreeTableView;
+import com.sun.prism.impl.ps.BaseShaderContext.MaskType;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.Tile.ChartType;
+import eu.hansolo.tilesfx.Tile.ImageMask;
 import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.Tile.TextSize;
 import eu.hansolo.tilesfx.TileBuilder;
@@ -687,11 +689,19 @@ public class dataWarehousingController {
 
 	private void initializeInfo() {
 		nameTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Name")
-				.description(project.getName()).textSize(TextSize.BIGGER).descriptionAlignment(Pos.CENTER)
+				.description(project.getName()).textSize(TextSize.BIGGER).descriptionAlignment(Pos.CENTER).backgroundImage(new Image("images"+File.separator+"project.png"))
+				.backgroundImageOpacity(0.5)
 				.textVisible(true).build();
-		authorTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Project Author").description(project.getOwner()).textSize(TextSize.BIGGER)
-				.descriptionAlignment(Pos.CENTER).textVisible(true).build();
+		authorTile = TileBuilder.create().
+				skinType(SkinType.TEXT).
+				prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Project Author").
+				description(project.getOwner())
+				.textSize(TextSize.BIGGER)
+				.backgroundImage(new Image("images" + File.separator + "user.png"))
+				.backgroundImageOpacity(0.5)
+				.descriptionAlignment(Pos.CENTER)
+				.textVisible(true).build();
 	}
 
 	private void initializeStoragePane() {

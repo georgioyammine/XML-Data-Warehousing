@@ -437,7 +437,6 @@ public class dataWarehousingController {
 		pane = new FlowGridPane(6, 3, matrixTile, clockTile,numberTile, storageTile, directoryTile,addVersionTile,
 										calendarTile, homeTile, nameTile, authorTile ,gaugeTile, sparkLineTile,
 										 dayTile, lineChartTile, highLowTile, timerControlTile, xdpTile, gitHubTile);
-		storageTile.setValue(getSavedSpace());
 		pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
 		pane.setAlignment(Pos.CENTER);
 		pane.setCenterShape(true);
@@ -734,8 +733,8 @@ public class dataWarehousingController {
 						new Stop(0.6, Bright.GREEN_YELLOW), new Stop(0.7, Bright.GREEN),
 						new Stop(0.8, Bright.BLUE_GREEN), new Stop(1.0, Dark.BLUE))
 				.strokeWithGradient(true).animated(true).build();
-		storageTile.setValue(spaceSaved);
-		System.out.println(spaceSaved);
+//		storageTile.setValue(spaceSaved);
+//		System.out.println(spaceSaved);
 	}
 
 	private double getSavedSpace() {
@@ -1394,7 +1393,6 @@ public class dataWarehousingController {
 						
 						calendarTile.setChartData(getCalendarData());
 						numberTile.setValue(project.getNumberOfVersions());
-						System.out.println("AA"+getSavedSpace());
 						storageTile.setValue(getSavedSpace());
 					});
 					return null;

@@ -107,4 +107,11 @@
 
     thumb_pressed_color: #cccccc;
 }
+.tile:hover {
+   /* -fx-border-color: -fx-secondary; */
+    -fx-border-color: -fx-primarytext;
+    -fx-border-width: 2;    
+    -fx-border-radius: 4px;
+}
+
 

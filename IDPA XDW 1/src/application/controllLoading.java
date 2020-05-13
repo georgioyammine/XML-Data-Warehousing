@@ -100,7 +100,10 @@ public class controllLoading {
     				@Override
     				public Void call() throws Exception {
     					System.out.println("started");
-    					root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));    			
+    					long t1 = System.currentTimeMillis();
+    					root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));    		
+    					if(System.currentTimeMillis()-t1<1000)
+    						Thread.sleep(1000);
     					return null;
     					}
     				};

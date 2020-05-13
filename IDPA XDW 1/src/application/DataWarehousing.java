@@ -64,6 +64,9 @@ public class DataWarehousing  implements Serializable {
 		String prevFile = base+File.separator+versions.get(versions.size()-1).getRelativePath();
 		
 		String path =  base +  File.separator + "src"+ File.separator+"available files";
+		ArrayList<Object> TED = XMLDiffAndPatch.getDiffNode(pathOfNewVersion, prevFile, true);
+		if((double)TED.get(1)==1)
+			return false;
 		new File(path).mkdirs();
 		
 		Files.copy(Paths.get(file.getAbsolutePath()), Paths.get(path+File.separator+name+"_v"+(versions.size()+1)+".xml"));
@@ -77,7 +80,7 @@ public class DataWarehousing  implements Serializable {
 		new File(diffFolder).mkdirs();
 		String relativePath = "src"+ File.separator+"available files" + File.separator+name+"_v"+(versions.size()+1)+".xml";
 		
-		ArrayList<Object> TED = XMLDiffAndPatch.getDiffNode(copied.getAbsolutePath(), prevFile, true);
+		
 		Node diff = (Node) TED.get(0);
 		String diffPath = XMLDiffAndPatch.WriteXMLtoFile2(diff, "Diff_"+(versions.size()+1)+"to"+(versions.size())+".xml", diffFolder, true);
 		versions.add(new Version(versions.size()+1, owner,currentDate, copied.length(), relativePath, ((double) TED.get(1))*100, true, new File(diffPath).length()));

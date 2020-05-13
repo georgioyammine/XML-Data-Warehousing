@@ -98,12 +98,19 @@ Text {
  * Button and ToggleButton                                                     *
  *                                                                             *
  ******************************************************************************/
+.button:hover, .button:focused{
+    -fx-background-color: #FFFF8D;
+    -fx-border-radius: 18px;
+    -fx-background-radius: 18px;
+	}
 
 .button, .toggle-button {
+	-fx-border-radius: 18px;
+    -fx-background-radius: 18px;
     button_background_color: #333333;
     background_pressed_color: #666666;
-
-    border_hover_color: #858585;
+	
+    border_hover_color: #FFFF8D;
 
     text_color: white;
     default_button_text_color: white;
@@ -113,10 +120,14 @@ Text {
 
 .button {
     border_hover_default_color: derive(accent_color, 70%);
+    -fx-border-radius: 18px;
+    -fx-background-radius: 18px;
 }
 
 .toggle-button {
     border_hover_selected_color: derive(accent_color, 70%);
+    -fx-border-radius: 18px;
+    -fx-background-radius: 18px;
 }
 
 /*******************************************************************************

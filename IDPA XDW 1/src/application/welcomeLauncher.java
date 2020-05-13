@@ -1,5 +1,10 @@
 package application;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Stack;
 
 import javafx.application.Application;
@@ -11,15 +16,18 @@ import javafx.stage.Stage;
 
 public class welcomeLauncher extends Application {
 	static Stack<String> classes = new Stack<>();
-
+	static String launchName = "welcomeScreen.fxml";
 	@Override
 	public void start(Stage stage) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource(launchName));
 
 		Scene scene = new Scene(root, 800, 450);
 //		new JMetro(scene, Style.DARK);
 		stage.setScene(scene);
-		stage.setResizable(false);
+		if(launchName.equals("dataWarehousing.fxml"))
+			stage.setResizable(true);
+		else
+			stage.setResizable(false);
 		stage.setTitle("XDW - XML Data Warehousing ");
 		// stage.getIcons().add(new Image("iconN (1).png"));
 		stage.getIcons().add(new Image("icon-main@3x.png"));
@@ -28,10 +36,68 @@ public class welcomeLauncher extends Application {
 		// stage.getIcons().add(new Image(Main.class.getResourceAsStream( "icon.ico"
 		// )));
 		stage.show();
+		
 
 	}
 
 	public static void main(String[] args) {
-		launch(args);
+		if(args.length==0)
+			launch(args);
+		else {
+		if(args[0].isEmpty())
+			launch(args);
+		else {
+		try {
+			System.out.println(Arrays.toString(args));
+			StringBuilder sb = new StringBuilder();
+			for(String str : args)
+				sb.append(str+" ");
+			sb.delete(sb.length()-1, sb.length());
+			handleOpenProject(sb.toString());
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			launch(args);
+		}
+		}
+		}
+	}
+	public static void handleOpenProject(String path) throws IOException{
+		File file = new File(path);
+		History history;
+//		dirPath.setText("");
+		try {
+			String currentPath = welcomeLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+			currentPath = currentPath.substring(0,currentPath.lastIndexOf("/"));
+			String filename = currentPath.replace("/", File.separator)+ File.separator + "history.cfg";
+			System.out.println(filename);
+			history = History.load(filename);
+		} catch (Exception e) {
+//			ex.printStackTrace();
+			history = new History(20);
+		}
+		if (file != null) {
+			String currentPath = file.getAbsoluteFile().getParent();
+			System.out.println(path);
+			DataWarehousing project = DataWarehousing.load(file.getAbsolutePath());
+			dataWarehousingController.projectPath = file.getParent();
+			dataWarehousingController.project = project;
+			history.addToRecent(new Project(project.getName(),file.getParent(), project.getOwner()));
+			try {
+				currentPath = welcomeLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+				currentPath = currentPath.substring(0,currentPath.lastIndexOf("/"));
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			String filename = currentPath.replace("/", File.separator)+ File.separator + "history.cfg";
+			history.save(filename);
+			launchName = "dataWarehousing.fxml";
+			launch(null);
+			// Main.classes.pop();
+//			new JMetro(scene, Style.DARK);
+
+		}
 	}
 }

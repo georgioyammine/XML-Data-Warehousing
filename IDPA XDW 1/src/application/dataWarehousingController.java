@@ -385,12 +385,14 @@ public class dataWarehousingController {
 		percentageTile = TileBuilder.create().skinType(SkinType.PERCENTAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Percentage Tile").unit("%").description("Test").maxValue(60).build();
 
-		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile")
+		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).textSize(TextSize.BIGGER).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile")
 				.running(true).build();
 
+		// remove
 		gaugeTile = TileBuilder.create().skinType(SkinType.GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Gauge Tile")
 				.unit("V").threshold(75).build();
 
+		//remove
 		sparkLineTile = TileBuilder.create().skinType(SkinType.SPARK_LINE).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("SparkLine Tile").unit("mb")
 				.gradientStops(new Stop(0, Tile.GREEN), new Stop(0.5, Tile.YELLOW), new Stop(1.0, Tile.RED))
@@ -400,6 +402,7 @@ public class dataWarehousingController {
 
 		// sparkLineTile.valueProperty().bind(value);
 
+		// remove
 		areaChartTile = TileBuilder.create().skinType(SkinType.SMOOTHED_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("SmoothedChart Tile").chartType(ChartType.AREA)
 				// .animated(true)
@@ -412,6 +415,7 @@ public class dataWarehousingController {
 				// new Stop(1, Color.TRANSPARENT))))
 				.build();
 
+		// remove
 		lineChartTile = TileBuilder.create().skinType(SkinType.SMOOTHED_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("SmoothedChart Tile")
 				// .animated(true)
@@ -419,18 +423,21 @@ public class dataWarehousingController {
 				// .series(series2, series3)
 				.build();
 
+		//remove
 		highLowTile = TileBuilder.create().skinType(SkinType.HIGH_LOW).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("HighLow Tile").unit("\u20AC").description("Test").text("Whatever text").referenceValue(6.7)
 				.value(8.2).build();
 
+		// remove
 		timerControlTile = TileBuilder.create().skinType(SkinType.TIMER_CONTROL).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("TimerControl Tile").text("Whatever text").secondsVisible(true).dateVisible(true)
 				// .timeSections(timeSection)
 				.running(true).build();
 
-		pane = new FlowGridPane(6, 3, matrixTile, clockTile,numberTile, storageTile, directoryTile, calendarTile, homeTile, addVersionTile,
-										 nameTile, authorTile ,gaugeTile, sparkLineTile, dayTile,
-										lineChartTile, highLowTile,timerControlTile,xdpTile,gitHubTile);
+		pane = new FlowGridPane(6, 3, matrixTile, clockTile,numberTile, storageTile, directoryTile,addVersionTile,
+										calendarTile, homeTile, nameTile, authorTile ,gaugeTile, sparkLineTile,
+										 dayTile, lineChartTile, highLowTile, timerControlTile, xdpTile, gitHubTile);
+		storageTile.setValue(getSavedSpace());
 		pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
 		pane.setAlignment(Pos.CENTER);
 		pane.setCenterShape(true);
@@ -443,16 +450,25 @@ public class dataWarehousingController {
 
 		initializeTilePressed();
 		initializeBindings();
-		System.out.println(tableview.getScene());
+		
 		Platform.runLater(()->{
-		tableview.getScene().widthProperty().addListener((obs, oldVal, newVal) -> {
-			if (matrixTile != null)
-				matrixTile.setChartData(getWeeklyData());
+			System.out.println(homeTab.getScene());
+		authorTile.widthProperty().addListener((obs, oldVal, newVal) -> {
+			if (matrixTile != null) {
+				matrixTile.setChartData(getWeeklyData());	
+			}
+			if(storageTile!=null) {
+				storageTile.setValue(getSavedSpace());
+			}
 		});
 
-		tableview.getScene().heightProperty().addListener((obs, oldVal, newVal) -> {
-			if (matrixTile != null)
+		authorTile.heightProperty().addListener((obs, oldVal, newVal) -> {
+			if (matrixTile != null) {
 				matrixTile.setChartData(getWeeklyData());
+			}
+			if(storageTile!=null) {
+				storageTile.setValue(getSavedSpace());
+			}
 		});
 		});
 
@@ -460,7 +476,7 @@ public class dataWarehousingController {
 
 	private void initializeMatrixTile() {
 		matrixTile = TileBuilder.create().skinType(SkinType.MATRIX).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("MatrixTileSkin").text("Any Text").textVisible(false).animated(true).matrixSize(8, 20)
+				.title("Number of version per day").text("Any Text").textSize(TextSize.BIGGER).textVisible(false).animated(true).matrixSize(8, 20)
 				.chartData(getWeeklyData()).maxValue(20).build();
 
 	}
@@ -491,13 +507,13 @@ public class dataWarehousingController {
 	}
 
 	private void initializeDayTile() {
-		dayTile = TileBuilder.create().skinType(SkinType.DATE).prefSize(TILE_WIDTH, TILE_HEIGHT).build();
+		dayTile = TileBuilder.create().skinType(SkinType.DATE).textSize(TextSize.BIGGER).prefSize(TILE_WIDTH, TILE_HEIGHT).build();
 
 	}
 
 	private void initializeXDPTile() {
 		xdpTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("XML Diff and Patch App").image(new Image(("icon-main@3x.png")))
+				.title("XML Diff and Patch App").textSize(TextSize.BIGGER).image(new Image(("icon-main@3x.png")))
 				.textAlignment(TextAlignment.CENTER).build();
 
 	}
@@ -711,13 +727,14 @@ public class dataWarehousingController {
 
 		double spaceSaved = getSavedSpace();
 		storageTile = TileBuilder.create().skinType(SkinType.BAR_GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).minValue(0)
-				.maxValue(100).startFromZero(true).title("Space Saved").textSize(TextSize.BIGGER).value(spaceSaved)
+				.maxValue(100).startFromZero(true).title("Space Saved").textSize(TextSize.BIGGER)
 				.unit("%")
 				.gradientStops(new Stop(0, Bright.RED), new Stop(0.1, Bright.RED), new Stop(0.2, Bright.ORANGE_RED),
 						new Stop(0.3, Bright.ORANGE), new Stop(0.4, Bright.YELLOW_ORANGE), new Stop(0.5, Bright.YELLOW),
 						new Stop(0.6, Bright.GREEN_YELLOW), new Stop(0.7, Bright.GREEN),
 						new Stop(0.8, Bright.BLUE_GREEN), new Stop(1.0, Dark.BLUE))
 				.strokeWithGradient(true).animated(true).build();
+		storageTile.setValue(spaceSaved);
 		System.out.println(spaceSaved);
 	}
 
@@ -728,8 +745,8 @@ public class dataWarehousingController {
 		for (Version v : project.versions)
 			originalSize += v.getSizeInBytes();
 		double spaceSaved = (1 - (directorySize / (double) originalSize)) * 100;
-		System.out.println("Directory Size" + directorySize);
-		System.out.println("Original Size: " + originalSize);
+		if(spaceSaved == Double.NEGATIVE_INFINITY)
+			return 0;
 		return spaceSaved;
 	}
 
@@ -758,14 +775,12 @@ public class dataWarehousingController {
 		ZonedDateTime now = ZonedDateTime.now();
 		List<ChartData> calendarData = new ArrayList<ChartData>();
 		Date date = new Date(System.currentTimeMillis());
-		System.out.println(date.getDay());
 
 		for (int i = 0; i < project.versions.size(); i++) {
 			if (project.versions.get(i).getDateCreated().getMonth() == date.getMonth()) {
 				calendarData.add(new ChartData("Item " + (i + 1),
 						now.plusDays((long) (project.versions.get(i).getDateCreated().getDate()) - 1).toInstant()));
 			}
-			System.out.println(project.versions.get(i).getDateCreated().getDate());
 		}
 		return calendarData;
 	}
@@ -1376,9 +1391,11 @@ public class dataWarehousingController {
 					Platform.runLater(() -> {
 						saveVersion();
 						updateInfo();
-						storageTile.setValue(getSavedSpace());
+						
 						calendarTile.setChartData(getCalendarData());
 						numberTile.setValue(project.getNumberOfVersions());
+						System.out.println("AA"+getSavedSpace());
+						storageTile.setValue(getSavedSpace());
 					});
 					return null;
 

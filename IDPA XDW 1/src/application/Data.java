@@ -1,5 +1,8 @@
 package application;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -7,11 +10,12 @@ import javafx.beans.property.SimpleStringProperty;
 public class Data {
 	private SimpleIntegerProperty version;
 	private SimpleStringProperty date;
-	private SimpleLongProperty size;
+	private SimpleStringProperty size;
 	private SimpleStringProperty diffSize;
 	private SimpleStringProperty similarity;
 	private SimpleStringProperty status;
 	private SimpleStringProperty author;
+	private long diffBytes,  sizeBytes;
 	
 //	public Data(String version, String date, String size, String diffSize, String similarity, String status) {
 //		this.version = new SimpleStringProperty(version);
@@ -25,8 +29,10 @@ public class Data {
 	public Data(Version version) {
 		this.version = new SimpleIntegerProperty(version.getNumber());
 		this.date = new SimpleStringProperty(version.getDateCreated()+"");
-		this.size = new SimpleLongProperty(version.getSizeInBytes());
-		this.diffSize = new SimpleStringProperty(version.getDiffSizeInBytes()==-1?"N/A":version.getDiffSizeInBytes()+"");
+		this.size = new SimpleStringProperty(humanReadableByteCountBin(version.getSizeInBytes()));
+		this.diffSize = new SimpleStringProperty(version.getDiffSizeInBytes()==-1?"N/A":humanReadableByteCountBin(version.getDiffSizeInBytes()));
+		diffBytes = version.getDiffSizeInBytes();
+		sizeBytes = version.getSizeInBytes();
 		String str = version.getSimilarity()+"";
 		if(str.length()>4) {
 			str = str.substring(0,4);
@@ -58,7 +64,7 @@ public class Data {
 //		this.date = new SimpleStringProperty(date);
 //	}
 
-	public long getSize() {
+	public String getSize() {
 		return size.get();
 	}
 
@@ -96,4 +102,19 @@ public class Data {
 				+ ", similarity=" + similarity + ", status=" + status + "]";
 	}
 
+	public static String humanReadableByteCountBin(long bytes) {
+	    long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+	    if (absB < 1024) {
+	        return bytes + " B";
+	    }
+	    long value = absB;
+	    CharacterIterator ci = new StringCharacterIterator("KMGTPE");
+	    for (int i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
+	        value >>= 10;
+	        ci.next();
+	    }
+	    value *= Long.signum(bytes);
+	    return String.format("%.1f %ciB", value / 1024.0, ci.current()).replace("i","");
+	}
+	
 }

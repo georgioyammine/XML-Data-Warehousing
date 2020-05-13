@@ -122,7 +122,9 @@ Text {
     -fx-border-color: transparent;
     -fx-border-width: 2;
 
-    -fx-background-radius: 0;
+	-fx-border-radius: 18px;
+    -fx-background-radius: 18px;
+
     -fx-background-insets: 0;
     -fx-background-color: button_background_color;
 

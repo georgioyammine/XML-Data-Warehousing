@@ -13,6 +13,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -35,6 +36,7 @@ import javafx.util.Callback;
 import jfxtras.styles.jmetro.JMetro;
 import jfxtras.styles.jmetro.Style;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -58,7 +60,7 @@ public class welcomeController {
 	JFXPasswordField passId;
 	@FXML
 	JFXPasswordField confPassId;
-	int historyCapacity = 10;
+	int historyCapacity = 20;
 	History history;
 	String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 
@@ -81,6 +83,7 @@ public class welcomeController {
 	@FXML
 	public void initialize() {
 		dirPath.setText("");
+		errorMessage.setText("");
 		try {
 			String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 			String filename = currentPath+ File.separator + "history.cfg";
@@ -112,7 +115,6 @@ public class welcomeController {
 					{
 						btn.setOnAction((ActionEvent event) -> {
 							ProjectData project = getTableView().getItems().get(getIndex());
-							System.out.println("Pin: " + project);
 							historyFinal.pin(new Project(project.getName(), project.getPath(), project.getAuthor()));
 							updatePinned();
 						});
@@ -142,8 +144,7 @@ public class welcomeController {
 					{
 						btn.setOnAction((ActionEvent event) -> {
 							ProjectData project = getTableView().getItems().get(getIndex());
-							System.out.println("Unpin: " + project);
-							System.out.println(historyFinal.unpin(new Project(project.getName(), project.getPath(), project.getAuthor())));
+							historyFinal.unpin(new Project(project.getName(), project.getPath(), project.getAuthor()));
 							updatePinned();
 						});
 					}
@@ -173,7 +174,6 @@ public class welcomeController {
 		updatePinned();
 		pinnedTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 		    if (newSelection != null) {
-		        System.out.println(newSelection);
 		        try {
 					handleOpenProject(((ProjectData)newSelection).getPath()+File.separator+((ProjectData)newSelection).getName()+".xdw");
 				} catch (IOException e) {
@@ -196,7 +196,6 @@ public class welcomeController {
 		history = historyFinal;
 	}
 	public void updatePinned() {
-		System.out.println("P");
 		ArrayList<ProjectData> pinnedArr = new ArrayList<>();
 		for(Project p:history.getPinned()) {
 			pinnedArr.add(new ProjectData(p));
@@ -252,26 +251,55 @@ public class welcomeController {
 			String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 			String filename = currentPath+ File.separator + "history.cfg";
 			history.save(filename);
-			dataWarehousingController.project = project;
-			dataWarehousingController.projectPath = dirPath.getText() + File.separator + nameId.getText().trim();
+			controllLoading.project = project;
+			controllLoading.projectDir = dirPath.getText() + File.separator + nameId.getText().trim();
+			controllLoading.stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			// Main.classes.pop();
 //			final
-			Parent root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
-			Scene scene = new Scene(root, 800, 450);
-			Stage window = (Stage) (((Node) event.getSource()).getScene().getWindow());
-			window.setResizable(true);
-			window.setScene(scene);
+			Parent root = FXMLLoader.load(getClass().getResource("loadingScreen.fxml"));
+//			Scene scene = new Scene(root, 800, 450);
 
+			
+			Stage splash  = new Stage();
+			Stage stage = (Stage)  (recentTable.getScene().getWindow());
+			Platform.setImplicitExit(false);
+			Scene scene = new Scene(root);
+			splash.setScene(scene);
+	        splash.initStyle(StageStyle.UNDECORATED);
+//	        splash.setOnHiding(event2 -> Platform.exit());
+	    	stage.setOnHidden(null);
+	    	stage.hide();
+	        splash.show();
 		}
 	}
 
+	@FXML Label errorMessage;
 	private boolean verifyAllCorrect() {
 		// TODO Auto-generated method stub
+		StringBuilder sb = new StringBuilder();
 		boolean verified = true;
-		verified &= passId.getText().equals(confPassId.getText());
-		verified &= dirPath.getText()!="";
-		verified &= nameId.getText()!="";
-		verified &= authorId.getText()!="";
+		if(dirPath.getText().isEmpty()) {
+			sb.append("Error: Directory Invalid! \n");
+			verified = false;
+		}
+		if(nameId.getText().isEmpty()) {
+			sb.append("Error: Project Name Invalid! \n");
+			verified = false;
+		}
+		if(authorId.getText().isEmpty()) {
+			sb.append("Error: Project Name Invalid! \n");
+			verified = false;
+		}
+		if(!passId.getText().equals(confPassId.getText())) {
+			sb.append("Error: Passwords do not match! \n");
+			verified = false;
+		}
+		
+//		verified &= passId.getText().equals(confPassId.getText());
+//		verified &= dirPath.getText()!="";
+//		verified &= nameId.getText()!="";
+//		verified &= authorId.getText()!="";
+		errorMessage.setText(sb.toString());
 		return verified;
 	}
 
@@ -297,21 +325,43 @@ public class welcomeController {
 			currentPath = file.getAbsoluteFile().getParent();
 			System.out.println(path);
 			DataWarehousing project = DataWarehousing.load(file.getAbsolutePath());
-			dataWarehousingController.projectPath = file.getParent();
-			dataWarehousingController.project = project;
+
+			
+//			dataWarehousingController.projectPath = file.getParent();
+//			dataWarehousingController.project = project;
 			history.addToRecent(new Project(project.getName(),file.getParent(), project.getOwner()));
 			String currentPath = Paths.get(".").toAbsolutePath().normalize().toString();
 			String filename = currentPath+ File.separator + "history.cfg";
 			history.save(filename);
 
+			controllLoading.project = project;
+			controllLoading.projectDir = file.getParent();
+			controllLoading.stage = (Stage) recentTable.getScene().getWindow();
 			// Main.classes.pop();
-			Parent root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
+//			final
+			Parent root = FXMLLoader.load(getClass().getResource("loadingScreen.fxml"));
+//			Scene scene = new Scene(root, 800, 450);
 
-			Scene scene = new Scene(root, 800, 450);
+			Stage splash  = new Stage();
+			Stage stage = (Stage)  (recentTable.getScene().getWindow());
+			Platform.setImplicitExit(false);
+			Scene scene = new Scene(root);
+			splash.setScene(scene);
+	        splash.initStyle(StageStyle.UNDECORATED);
+//	        splash.setOnHiding(event -> Platform.exit());
+	        stage.setOnHidden(null);
+	    	stage.hide();
+	        splash.show();
+	        
+			
+			// Main.classes.pop();
+//			Parent root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
+
+//			Scene scene = new Scene(root, 800, 450);
 //			new JMetro(scene, Style.DARK);
-			Stage window = (Stage) (recentTable.getScene().getWindow());
-			window.setResizable(true);
-			window.setScene(scene);
+//			Stage window = (Stage) (recentTable.getScene().getWindow());
+//			window.setResizable(true);
+//			window.setScene(scene);
 		}
 	}
 

@@ -27,6 +27,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
@@ -135,17 +136,23 @@ public class controllLoading {
 	        new FadeInTransition(vboxBottom).play();
         });
         service.setOnSucceeded((event) -> {
-    		Scene scene = new Scene(root);
-    		if(stage==null)
+    		Scene scene = new Scene(root,850,450);
+    		if(stage==null) {
     			stage = new Stage();
+    			stage.setTitle("XDW - XML Data Warehousing ");
+    			// stage.getIcons().add(new Image("iconN (1).png"));
+    			stage.getIcons().add(new Image("icon-main@3x.png"));
+    		}
 			stage.setScene(scene);
 			Stage window = (Stage) (vboxBottom.getScene().getWindow());
 			stage.setOnHidden(event2 -> Platform.exit());
-			stage.show();
 			stage.setResizable(true);
+			stage.show();
+			stage.setWidth(850);
 			stage.setMinHeight(350);
 			stage.setMinWidth(530);
 			window.hide();
+    		
         });
             
     } 

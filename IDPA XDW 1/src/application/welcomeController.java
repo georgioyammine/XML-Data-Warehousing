@@ -33,8 +33,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Callback;
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.scene.control.TableView;

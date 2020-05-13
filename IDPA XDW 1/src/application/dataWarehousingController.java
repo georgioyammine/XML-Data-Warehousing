@@ -31,7 +31,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.FileUtils;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -205,7 +204,6 @@ public class dataWarehousingController {
 	static String projectPath;
 	Element queryingVersionRoot;
 
-	private AutoCompletionBinding autoCompletionBinding;
 
 	@FXML
 	public void applySettingsHandle() {

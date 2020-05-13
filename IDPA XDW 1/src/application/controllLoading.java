@@ -101,9 +101,27 @@ public class controllLoading {
     				public Void call() throws Exception {
     					System.out.println("started");
     					long t1 = System.currentTimeMillis();
-    					root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));    		
-    					if(System.currentTimeMillis()-t1<1000)
-    						Thread.sleep(1000);
+    					try {
+    					root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));   
+    					}catch(Exception e) {
+//    						e.printStackTrace();
+    						Platform.runLater(new Runnable() {
+								
+								@Override
+								public void run() {
+									try {
+										root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}   
+			    					
+									
+								}
+							});
+    					}
+    					if(System.currentTimeMillis()-t1<2000)
+    						Thread.sleep(2000 - (System.currentTimeMillis()-t1));
     					return null;
     					}
     				};
@@ -117,7 +135,9 @@ public class controllLoading {
 	        new FadeInTransition(vboxBottom).play();
         });
         service.setOnSucceeded((event) -> {
-    		Scene scene = new Scene(root, 800, 450);
+    		Scene scene = new Scene(root);
+    		if(stage==null)
+    			stage = new Stage();
 			stage.setScene(scene);
 			Stage window = (Stage) (vboxBottom.getScene().getWindow());
 			stage.setOnHidden(event2 -> Platform.exit());

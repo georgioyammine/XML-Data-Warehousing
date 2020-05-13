@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class welcomeLauncher extends Application {
 	static Stack<String> classes = new Stack<>();
@@ -21,13 +22,14 @@ public class welcomeLauncher extends Application {
 	public void start(Stage stage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource(launchName));
 
-		Scene scene = new Scene(root, 800, 450);
+		Scene scene = new Scene(root);
 //		new JMetro(scene, Style.DARK);
+		System.out.println("aa"+launchName);
 		stage.setScene(scene);
-		if(launchName.equals("dataWarehousing.fxml"))
-			stage.setResizable(true);
-		else
-			stage.setResizable(false);
+		if(launchName.equals("loadingScreen.fxml"))
+			stage.initStyle(StageStyle.UNDECORATED);
+//		else
+//			stage.setResizable(false);
 		stage.setTitle("XDW - XML Data Warehousing ");
 		// stage.getIcons().add(new Image("iconN (1).png"));
 		stage.getIcons().add(new Image("icon-main@3x.png"));
@@ -62,7 +64,7 @@ public class welcomeLauncher extends Application {
 		}
 		}
 	}
-	public static void handleOpenProject(String path) throws IOException{
+	public static void handleOpenProject(String path) throws IOException, URISyntaxException{
 		File file = new File(path);
 		History history;
 //		dirPath.setText("");
@@ -80,8 +82,8 @@ public class welcomeLauncher extends Application {
 			String currentPath = file.getAbsoluteFile().getParent();
 			System.out.println(path);
 			DataWarehousing project = DataWarehousing.load(file.getAbsolutePath());
-			dataWarehousingController.projectPath = file.getParent();
-			dataWarehousingController.project = project;
+			controllLoading.projectDir = file.getParent();
+			controllLoading.project = project;
 			history.addToRecent(new Project(project.getName(),file.getParent(), project.getOwner()));
 			try {
 				currentPath = welcomeLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
@@ -93,7 +95,7 @@ public class welcomeLauncher extends Application {
 			
 			String filename = currentPath.replace("/", File.separator)+ File.separator + "history.cfg";
 			history.save(filename);
-			launchName = "dataWarehousing.fxml";
+			launchName = "loadingScreen.fxml";
 			launch(null);
 			// Main.classes.pop();
 //			new JMetro(scene, Style.DARK);

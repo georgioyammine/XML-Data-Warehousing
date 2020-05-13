@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlElementDecl;
+
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 
@@ -157,6 +160,24 @@ public class DataWarehousing  implements Serializable {
 				String diffFile = diffFolder+File.separator+"Diff_"+i+"to"+(i-1)+".xml";
 				node = XMLDiffAndPatch.applyPatchXMLNode(node, diffFile, false);
 			}
+		}
+		String diffFile = diffFolder+File.separator+"Diff_"+(version.getNumber()+1)+"to"+(version.getNumber())+".xml";
+		Node ESroot = XMLDiffAndPatch.getRootNodeFromFile(diffFile);
+		String targetHash = ((Element) ESroot).getElementsByTagName("Patched_File").item(0).getAttributes().item(0)
+				.getNodeValue();
+		
+		File tmpInput2 = File.createTempFile("patch1", ".tmp");
+		tmpInput2.deleteOnExit();
+		XMLDiffAndPatch.WriteXMLtoFile(node, tmpInput2.getAbsolutePath(), true,true);
+		long crc2 = XMLDiffAndPatch.checksumBufferedInputStream(tmpInput2);
+		String hashInput2 = Long.toHexString(crc2);
+		tmpInput2.delete();
+		
+
+		if (!targetHash.equals(hashInput2)) {
+			System.out.println("Wrong Result Expected: Hash checksum does not match");
+		} else {
+			System.out.println("Patch successful, hash checksum matches!");
 		}
 		
 		return node;

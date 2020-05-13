@@ -2729,9 +2729,18 @@ public class XMLDiffAndPatch extends Observable {
 			// ESroot).getElementsByTagName("Edit_Script").item(0).getChildNodes();
 			Node es = ((Element) ESroot).getElementsByTagName("Edit_Script").item(0);
 
-			Node update = ((Element) es).getElementsByTagName("Update").item(0);
-			Node delete = ((Element) es).getElementsByTagName("Delete").item(0);
-			Node insert = ((Element) es).getElementsByTagName("Insert").item(0);
+			Node update = null;
+			Node delete = null;
+			Node insert = null;
+			NodeList childs = ((Element) es).getChildNodes();
+			for(int i = 0; i< childs.getLength();i++) {
+				if(childs.item(i).getNodeName().equals("Update"))
+					update = childs.item(i);
+				if(childs.item(i).getNodeName().equals("Delete"))
+					delete = childs.item(i);
+				if(childs.item(i).getNodeName().equals("Insert"))
+					insert = childs.item(i);
+			}
 			progressPropertyPatch.set(0.1);
 
 			if (update != null) {
@@ -2956,7 +2965,6 @@ public class XMLDiffAndPatch extends Observable {
 	}
 
 	public static Node applyPatchXMLNode(Node prevFile, String ESXML, boolean bypass) throws Exception {
-		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.newDocument();
@@ -3011,10 +3019,20 @@ public class XMLDiffAndPatch extends Observable {
 			// NodeList editScript = ((Element)
 			// ESroot).getElementsByTagName("Edit_Script").item(0).getChildNodes();
 			Node es = ((Element) ESroot).getElementsByTagName("Edit_Script").item(0);
-
-			Node update = ((Element) es).getElementsByTagName("Update").item(0);
-			Node delete = ((Element) es).getElementsByTagName("Delete").item(0);
-			Node insert = ((Element) es).getElementsByTagName("Insert").item(0);
+			
+			Node update = null;
+			Node delete = null;
+			Node insert = null;
+			NodeList childs = ((Element) es).getChildNodes();
+			for(int i = 0; i< childs.getLength();i++) {
+				if(childs.item(i).getNodeName().equals("Update"))
+					update = childs.item(i);
+				if(childs.item(i).getNodeName().equals("Delete"))
+					delete = childs.item(i);
+				if(childs.item(i).getNodeName().equals("Insert"))
+					insert = childs.item(i);
+			}
+		
 			progressPropertyPatch.set(0.1);
 
 			if (update != null) {
@@ -3223,17 +3241,7 @@ public class XMLDiffAndPatch extends Observable {
 //			progressPropertyPatch.set(1);
 			return rootC;
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			throw new Exception("Error:"+e.toString());
-//			e.printStackTrace();
-//			ArrayList<String> arl= new ArrayList<>();
-//			arl.add("Error Exception: "+e.toString());
-//
-//			arl.add("");
-//			progressPropertyPatch.set(1);
-//			return arl;
-		}
+
 
 	}
 

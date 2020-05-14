@@ -909,11 +909,11 @@ public class dataWarehousingController {
 	private void initializeInfo() {
 		nameTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Name")
 				.description(project.getName()).textSize(TextSize.BIGGER).descriptionAlignment(Pos.CENTER)
-				.backgroundImage(new Image("images" + File.separator + "project.png")).backgroundImageOpacity(0.5)
+				.backgroundImage(new Image("images/project.png")).backgroundImageOpacity(0.5)
 				.textVisible(true).build();
 		authorTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Project Author").description(project.getOwner()).textSize(TextSize.BIGGER)
-				.backgroundImage(new Image("images" + File.separator + "user.png")).backgroundImageOpacity(0.5)
+				.backgroundImage(new Image("images/user.png")).backgroundImageOpacity(0.5)
 				.descriptionAlignment(Pos.CENTER).customFont(new Font(100)).customFontEnabled(true).textVisible(true)
 				.build();
 	}

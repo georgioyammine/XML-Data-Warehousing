@@ -482,6 +482,7 @@ public class dataWarehousingController<T> {
 		initializeRadarChart();
 		initializeChangesTile();
 		initializeDotMatrix();
+		aboutText.setEditable(false);
 		// getVersionsLastAccessedTime();
 
 		newUserField.setVisible(false);

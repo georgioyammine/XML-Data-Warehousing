@@ -9,7 +9,11 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -46,18 +50,21 @@ import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXTreeTableView;
-import com.sun.prism.impl.ps.BaseShaderContext.MaskType;
 
 import eu.hansolo.tilesfx.Tile;
 import eu.hansolo.tilesfx.Tile.ChartType;
-import eu.hansolo.tilesfx.Tile.ImageMask;
 import eu.hansolo.tilesfx.Tile.SkinType;
 import eu.hansolo.tilesfx.Tile.TextSize;
 import eu.hansolo.tilesfx.TileBuilder;
+import eu.hansolo.tilesfx.addons.Indicator;
 import eu.hansolo.tilesfx.chart.ChartData;
+import eu.hansolo.tilesfx.chart.RadarChart.Mode;
 import eu.hansolo.tilesfx.colors.Bright;
 import eu.hansolo.tilesfx.colors.Dark;
+import eu.hansolo.tilesfx.skins.LeaderBoardItem;
 import eu.hansolo.tilesfx.tools.FlowGridPane;
+import eu.hansolo.tilesfx.tools.Helper;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -184,10 +191,69 @@ public class dataWarehousingController {
 	private Tile xdpTile;
 	private Tile dayTile;
 	private Tile matrixTile;
+	private Tile leaderBoardTile;
+	private Tile quoteTile;
+	private Tile radarChartTile;
+	private Tile changesTile;
 
-	private final double TILE_WIDTH = 300;
-	private final double TILE_HEIGHT = 300;
+	private final double TILE_WIDTH = 640;
+	private final double TILE_HEIGHT = 640;
 	FlowGridPane pane;
+
+	private long lastTimerCall;
+	private AnimationTimer timer;
+	private String[] quotes = new String[] { "Coding will be done", "To code or not to code...",
+			"Readying for the Code", "Adding the I to the DE", "Get some coding done", "Click, start, code...",
+			"On your mark, get set, CODE!", "Release the coding beast", "Cool Developers use only $product",
+			"Code with your brain, debug with your heart", "\"Insert cool phrase about coding HERE\"",
+			"Are you ready for some Dev fun?", "Keep it up, keep it in style",
+			"Modern coding has never looked so modern", "You only live once, so get coding!",
+			"Developers will develop... Oh! And they eat too.", "Don't judge a code by its bugs",
+			"Every developer is an artist", "Code never lies", "To debug or not to debug... meh, just System.out",
+			"Develop like your life is paid by it", "Your worst code is another coder's best",
+			"Algorithms are made for the weak", "Coding at night brings morning delight",
+			"Coding to commence in 3, 2, ...", "Coding tunnel approaching... duck your head",
+			"Why code when you can code()", "All computers wait() at the same speed",
+			"Chuck Norris counted to infinity... twice", "Code makes very fast, very accurate mistakes",
+			"\"It works on my machine\"", "There's no test like production",
+			"To err is human, but for a real disaster you need a computer",
+			"Weeks of coding can save you hours of planning", "One man's constant is another man's variable",
+			"ASCII stupid question, get a stupid ANSI", "A coder looks both ways before crossing a one-way street",
+			"Hey! It compiles! Ship it!", "Experience is the name everyone gives to their mistakes",
+			"Beta is Latin for still doesn't work", "There is no place like 127.0.0.1",
+			"There is nothing quite so permanent as a quick fix", "/* TODO: Remove this comment */",
+			"One man's prototype is a manager's product", "Truth can only be found in one place: the code",
+			"It is what it is because you let it be so",
+			"Programming isn't what you know; it's what you can figure out", "Think twice, code once",
+			"First solve the problem - then, write the code",
+			"Tests are stories we tell the next generation of programmers",
+			"Coding is breaking one impossible task into many small possible tasks",
+			"Premature optimization is the root of all evil", "Don't get distracted by the noise",
+			"Simplicity is prerequisite for reliability", "Programming is the art of doing one thing at a time",
+			"They don't make bugs like Bunny anymore", "Talk is cheap - show me the code",
+			"'Programming' is a four-letter word", "Marketing is the observe() of programming",
+			"Controlling complexity is the essence of computer programming",
+			"The function of good software is to make the complex appear simple",
+			"There are only two industries that refer to their customers as 'users'",
+			"Good code is its own best documentation", "There are two ways to code bug-free; only the third one works",
+			"640K ought to be enough for anybody", "Before software can be reusable it first has to be usable",
+			"It's not a bug – it's an undocumented feature", "Deleted code is debugged code",
+			"In order to understand recursion, one must first understand recursion", "Blame doesn't fix bugs",
+			"Programming languages are all the same; you just need logic",
+			"When the budget is low, go after the low hanging fruit",
+			"All software boils down to pure binary - it works or it doesn't",
+			"Document what you know when you know it", "\"Given enough time, I can meet any software deadline\"",
+			"Computer Science: solving today's problems tomorrow", "If at first you don't succeed, call it version 1.0",
+			"You are making progress if each mistake is a new one",
+			"Compatible: Gracefully accepts erroneous data from any source",
+			"programmer, n. an organism that can turn caffeine into code",
+			"Any technology distinguishable from magic is insufficiently advanced",
+			"The thing about UDP jokes is I don't care if you get them or not", "All generalizations are bad",
+			"The longer a bug takes to fix, the smaller the fix is",
+			"A bug in the code is worth two in the documentation",
+			"All programmers are playwrights and all computers are lousy actors",
+			"If the code and the comments disagree, then both are probably wrong", "For Tech support : CTRL+ALT+DEL",
+			"The code is dark and full of terrors -Dave K" };
 
 	JFXAutoCompletePopup<String> autoCompletePopup = new JFXAutoCompletePopup<>();
 	ArrayList<String> words = new ArrayList<String>(); // Use to populate auto-completion search bar;
@@ -217,6 +283,7 @@ public class dataWarehousingController {
 
 	@FXML
 	public void initialize() throws IOException {
+		long start = System.currentTimeMillis();
 		searchBar.setVisible(false);
 
 		verCol.setCellValueFactory(new PropertyValueFactory<>("version"));
@@ -381,18 +448,39 @@ public class dataWarehousingController {
 		initializeXDPTile();
 		initializeDayTile();
 		initializeMatrixTile();
+		initializeLeaderBoardTile();
+		initializeQuoteTile();
+		initializeRadarChart();
+		initializeChangesTile();
+		// getVersionsLastAccessedTime();
+		lastTimerCall = System.nanoTime();
+		timer = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				if (now > lastTimerCall + 10_000_000_000L) {
+					quoteTile.setDescription(quotes[(int) (Math.random() * quotes.length)]);
+					leaderBoardTile.getLeaderBoardItems().get(1).setValue(10);
+					lastTimerCall = now;
+				}
+			}
+		};
+		timer.start();
+
+		System.out.println("Initialization: " + (System.currentTimeMillis() - start) + "ms");
 
 		percentageTile = TileBuilder.create().skinType(SkinType.PERCENTAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Percentage Tile").unit("%").description("Test").maxValue(60).build();
 
-		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).textSize(TextSize.BIGGER).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile")
-				.running(true).build();
+		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).textSize(TextSize.BIGGER)
+				.prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile").running(true).build();
 
 		// remove
-		gaugeTile = TileBuilder.create().skinType(SkinType.GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Gauge Tile")
-				.unit("V").threshold(75).build();
+		// gaugeTile =
+		// TileBuilder.create().skinType(SkinType.GAUGE).prefSize(TILE_WIDTH,
+		// TILE_HEIGHT).title("Gauge Tile")
+		// .unit("V").threshold(75).build();
 
-		//remove
+		// remove
 		sparkLineTile = TileBuilder.create().skinType(SkinType.SPARK_LINE).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("SparkLine Tile").unit("mb")
 				.gradientStops(new Stop(0, Tile.GREEN), new Stop(0.5, Tile.YELLOW), new Stop(1.0, Tile.RED))
@@ -423,7 +511,7 @@ public class dataWarehousingController {
 				// .series(series2, series3)
 				.build();
 
-		//remove
+		// remove
 		highLowTile = TileBuilder.create().skinType(SkinType.HIGH_LOW).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("HighLow Tile").unit("\u20AC").description("Test").text("Whatever text").referenceValue(6.7)
 				.value(8.2).build();
@@ -434,9 +522,9 @@ public class dataWarehousingController {
 				// .timeSections(timeSection)
 				.running(true).build();
 
-		pane = new FlowGridPane(6, 3, matrixTile, clockTile,numberTile, storageTile, directoryTile,addVersionTile,
-										calendarTile, homeTile, nameTile, authorTile ,gaugeTile, sparkLineTile,
-										 dayTile, lineChartTile, highLowTile, timerControlTile, xdpTile, gitHubTile);
+		pane = new FlowGridPane(6, 3, clockTile, numberTile, storageTile, directoryTile, addVersionTile, changesTile,
+				calendarTile, matrixTile, nameTile, authorTile, leaderBoardTile, quoteTile, xdpTile, gitHubTile,
+				homeTile);
 		pane.setPrefSize(homeTab.getPrefWidth(), homeTab.getPrefHeight());
 		pane.setAlignment(Pos.CENTER);
 		pane.setCenterShape(true);
@@ -449,35 +537,146 @@ public class dataWarehousingController {
 
 		initializeTilePressed();
 		initializeBindings();
-		
-		Platform.runLater(()->{
+
+		Platform.runLater(() -> {
 			System.out.println(homeTab.getScene());
-		authorTile.widthProperty().addListener((obs, oldVal, newVal) -> {
-			if (matrixTile != null) {
-				matrixTile.setChartData(getWeeklyData());	
-			}
-			if(storageTile!=null) {
-				storageTile.setValue(getSavedSpace());
-			}
+			authorTile.widthProperty().addListener((obs, oldVal, newVal) -> {
+				if (matrixTile != null) {
+					matrixTile.setChartData(getWeeklyData());
+				}
+				if (storageTile != null) {
+					storageTile.setValue(getSavedSpace());
+				}
+			});
+
+			authorTile.heightProperty().addListener((obs, oldVal, newVal) -> {
+				if (matrixTile != null) {
+					matrixTile.setChartData(getWeeklyData());
+				}
+				if (storageTile != null) {
+					storageTile.setValue(getSavedSpace());
+				}
+			});
 		});
 
-		authorTile.heightProperty().addListener((obs, oldVal, newVal) -> {
-			if (matrixTile != null) {
-				matrixTile.setChartData(getWeeklyData());
+	}
+
+	private void initializeChangesTile() {
+		Indicator leftGraphics = new Indicator(Tile.RED);
+		leftGraphics.setOn(true);
+
+		Indicator middleGraphics = new Indicator(Tile.YELLOW);
+		middleGraphics.setOn(true);
+
+		Indicator rightGraphics = new Indicator(Tile.GREEN);
+		rightGraphics.setOn(true);
+
+		changesTile = TileBuilder.create().skinType(SkinType.STATUS).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.description("Changes").leftText("Deletions").middleText("Updates")
+				.rightText("Insertions").leftGraphics(leftGraphics).middleGraphics(middleGraphics)
+				.rightGraphics(rightGraphics).text("Based on last version only").build();
+		updateChangesTile();
+
+	}
+
+	private void updateChangesTile() {
+		String diffPath = projectPath + File.separator + getDiffRelativePath((int) project.versions.size());
+		Node reversedDiff = XMLDiffAndPatch.reverseXMLESNode(diffPath);
+		reversedDiff = ((Element)reversedDiff).getElementsByTagName("Edit_Script").item(0);
+
+		Node update = null;
+		Node delete = null;
+		Node insert = null;
+		NodeList childs = ((Element) reversedDiff).getChildNodes();
+		for (int i = 0; i < childs.getLength(); i++) {
+			if (childs.item(i).getNodeName().equals("Update"))
+				update = childs.item(i);
+			if (childs.item(i).getNodeName().equals("Delete"))
+				delete = childs.item(i);
+			if (childs.item(i).getNodeName().equals("Insert"))
+				insert = childs.item(i);
+		}
+
+		if (update != null) {
+			changesTile.setMiddleValue(update.getChildNodes().getLength());
+		}
+		if (delete != null) {
+			changesTile.setLeftValue(delete.getChildNodes().getLength());
+		}
+		if (insert != null) {
+			changesTile.setRightValue(insert.getChildNodes().getLength());
+		}
+
+	}
+
+	private ArrayList<FileTime> getVersionsLastAccessedTime() {
+		ArrayList<FileTime> fileTimes = new ArrayList<FileTime>();
+
+		try {
+			for (int i = 0; i < project.versions.size(); i++) {
+				Path file = Paths.get(project.versions.get(i).getRelativePath());
+				BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
+				FileTime time = attrs.lastAccessTime();
+				fileTimes.add(time);
 			}
-			if(storageTile!=null) {
-				storageTile.setValue(getSavedSpace());
-			}
-		});
-		});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(fileTimes);
+		return fileTimes;
+	}
+
+	private void initializeRadarChart() {
+		ChartData chartData1 = new ChartData("Item 1", 24.0, Tile.GREEN);
+		ChartData chartData2 = new ChartData("Item 2", 10.0, Tile.BLUE);
+		ChartData chartData3 = new ChartData("Item 3", 12.0, Tile.RED);
+		ChartData chartData4 = new ChartData("Item 4", 13.0, Tile.YELLOW_ORANGE);
+		ChartData chartData5 = new ChartData("Item 5", 13.0, Tile.BLUE);
+		ChartData chartData6 = new ChartData("Item 6", 13.0, Tile.BLUE);
+		ChartData chartData7 = new ChartData("Item 7", 13.0, Tile.BLUE);
+		ChartData chartData8 = new ChartData("Item 8", 13.0, Tile.BLUE);
+		radarChartTile = TileBuilder.create().skinType(SkinType.RADAR_CHART).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.minValue(0).maxValue(50).title("RadarChart Polygon").unit("Unit").radarChartMode(Mode.POLYGON)
+				.gradientStops(new Stop(0.00000, Color.TRANSPARENT), new Stop(0.00001, Color.web("#3552a0")),
+						new Stop(0.09090, Color.web("#456acf")), new Stop(0.27272, Color.web("#45a1cf")),
+						new Stop(0.36363, Color.web("#30c8c9")), new Stop(0.45454, Color.web("#30c9af")),
+						new Stop(0.50909, Color.web("#56d483")), new Stop(0.72727, Color.web("#9adb49")),
+						new Stop(0.81818, Color.web("#efd750")), new Stop(0.90909, Color.web("#ef9850")),
+						new Stop(1.00000, Color.web("#ef6050")))
+				.text("Test").chartData(chartData1, chartData2, chartData3, chartData4, chartData5, chartData6,
+						chartData7, chartData8)
+				.tooltipText("").animated(true).smoothing(true).build();
+
+	}
+
+	private void initializeQuoteTile() {
+		quoteTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title(" ")
+				.textSize(TextSize.BIGGER).text("Click to copy the quote")
+				.description(quotes[(int) (Math.random() * quotes.length)]).descriptionAlignment(Pos.TOP_RIGHT)
+				.textVisible(true).build();
 
 	}
 
 	private void initializeMatrixTile() {
 		matrixTile = TileBuilder.create().skinType(SkinType.MATRIX).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Number of version per day").text("Any Text").textSize(TextSize.BIGGER).textVisible(false).animated(true).matrixSize(8, 20)
-				.chartData(getWeeklyData()).maxValue(20).build();
+				.title("Number of version per day").textSize(TextSize.BIGGER).textVisible(false).animated(true)
+				.matrixSize(8, 20).chartData(getWeeklyData()).maxValue(20).build();
 
+	}
+
+	private void initializeLeaderBoardTile() {
+		leaderBoardTile = TileBuilder.create().skinType(SkinType.LEADER_BOARD).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("LeaderBoard").text("Based on number of versions added")
+				.leaderBoardItems().build();
+		updateLeaderBoard();
+	}
+
+	private void updateLeaderBoard() {
+				leaderBoardTile.setLeaderBoardItems(new LeaderBoardItem(project.getOwner(),5),new LeaderBoardItem("Georgio",3));
+//				for(LeaderBoardItem item: leaderBoardTile.getLeaderBoardItems()) {
+//					item.setValue(5*Math.random());
+//				}
 	}
 
 	private ArrayList<ChartData> getWeeklyData() {
@@ -496,8 +695,9 @@ public class dataWarehousingController {
 
 		}
 		for (int i = 0; i < count.length; i++) {
-			LocalDate date1 = LocalDate.now().minusDays(7-i);
-			ChartData newData = new ChartData(date1.getMonth().toString() + ", " + date1.getDayOfMonth(), count[i], Tile.BLUE);
+			LocalDate date1 = LocalDate.now().minusDays(7 - i);
+			ChartData newData = new ChartData(date1.getMonth().toString() + ", " + date1.getDayOfMonth(), count[i],
+					Tile.BLUE);
 			newData.setValue(count[i]);
 			weeklyData.add(newData);
 		}
@@ -506,13 +706,14 @@ public class dataWarehousingController {
 	}
 
 	private void initializeDayTile() {
-		dayTile = TileBuilder.create().skinType(SkinType.DATE).textSize(TextSize.BIGGER).prefSize(TILE_WIDTH, TILE_HEIGHT).build();
+		dayTile = TileBuilder.create().skinType(SkinType.DATE).textSize(TextSize.BIGGER)
+				.prefSize(TILE_WIDTH, TILE_HEIGHT).build();
 
 	}
 
 	private void initializeXDPTile() {
 		xdpTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("XML Diff and Patch App").textSize(TextSize.BIGGER).image(new Image(("icon-main@3x.png")))
+				.title("XML Diff and Patch App").textSize(TextSize.BIGGER).image(new Image(("images/iconN.png")))
 				.textAlignment(TextAlignment.CENTER).build();
 
 	}
@@ -637,7 +838,7 @@ public class dataWarehousingController {
 
 	public void initializeHomeTile() {
 		homeTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Return to HomePage").textSize(TextSize.BIGGER).image(new Image("home1.png"))
+				.title("Return to HomePage").textSize(TextSize.BIGGER).image(new Image("images/home.png"))
 				// .backgroundColor(Color.TRANSPARENT)
 				.build();
 	}
@@ -701,40 +902,37 @@ public class dataWarehousingController {
 			}
 		});
 
+		quoteTile.setOnMouseClicked(event -> {
+			content.putString(quoteTile.getDescription());
+			clipboard.setContent(content);
+		});
+
 	}
 
 	private void initializeInfo() {
 		nameTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Project Name")
-				.description(project.getName()).textSize(TextSize.BIGGER).descriptionAlignment(Pos.CENTER).backgroundImage(new Image("images"+File.separator+"project.png"))
-				.backgroundImageOpacity(0.5)
+				.description(project.getName()).textSize(TextSize.BIGGER).descriptionAlignment(Pos.CENTER)
+				.backgroundImage(new Image("images" + File.separator + "project.png")).backgroundImageOpacity(0.5)
 				.textVisible(true).build();
-		authorTile = TileBuilder.create().
-				skinType(SkinType.TEXT).
-				prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Project Author").
-				description(project.getOwner())
-				.textSize(TextSize.BIGGER)
-				.backgroundImage(new Image("images" + File.separator + "user.png"))
-				.backgroundImageOpacity(0.5)
-				.descriptionAlignment(Pos.CENTER)
-				.customFont(new Font(100))
-				.customFontEnabled(true)
-				.textVisible(true).build();
+		authorTile = TileBuilder.create().skinType(SkinType.TEXT).prefSize(TILE_WIDTH, TILE_HEIGHT)
+				.title("Project Author").description(project.getOwner()).textSize(TextSize.BIGGER)
+				.backgroundImage(new Image("images" + File.separator + "user.png")).backgroundImageOpacity(0.5)
+				.descriptionAlignment(Pos.CENTER).customFont(new Font(100)).customFontEnabled(true).textVisible(true)
+				.build();
 	}
 
 	private void initializeStoragePane() {
 
 		double spaceSaved = getSavedSpace();
 		storageTile = TileBuilder.create().skinType(SkinType.BAR_GAUGE).prefSize(TILE_WIDTH, TILE_HEIGHT).minValue(0)
-				.maxValue(100).startFromZero(true).title("Space Saved").textSize(TextSize.BIGGER)
-				.unit("%")
+				.maxValue(100).startFromZero(true).title("Space Saved").textSize(TextSize.BIGGER).unit("%")
 				.gradientStops(new Stop(0, Bright.RED), new Stop(0.1, Bright.RED), new Stop(0.2, Bright.ORANGE_RED),
 						new Stop(0.3, Bright.ORANGE), new Stop(0.4, Bright.YELLOW_ORANGE), new Stop(0.5, Bright.YELLOW),
 						new Stop(0.6, Bright.GREEN_YELLOW), new Stop(0.7, Bright.GREEN),
 						new Stop(0.8, Bright.BLUE_GREEN), new Stop(1.0, Dark.BLUE))
 				.strokeWithGradient(true).animated(true).build();
-//		storageTile.setValue(spaceSaved);
-//		System.out.println(spaceSaved);
+		// storageTile.setValue(spaceSaved);
+		// System.out.println(spaceSaved);
 	}
 
 	private double getSavedSpace() {
@@ -744,7 +942,7 @@ public class dataWarehousingController {
 		for (Version v : project.versions)
 			originalSize += v.getSizeInBytes();
 		double spaceSaved = (1 - (directorySize / (double) originalSize)) * 100;
-		if(spaceSaved == Double.NEGATIVE_INFINITY)
+		if (spaceSaved == Double.NEGATIVE_INFINITY)
 			return 0;
 		return spaceSaved;
 	}
@@ -758,7 +956,7 @@ public class dataWarehousingController {
 
 	private void updateGitHubPane() {
 		gitHubTile = TileBuilder.create().skinType(SkinType.IMAGE).prefSize(TILE_WIDTH, TILE_HEIGHT)
-				.title("Open GitHub").textSize(TextSize.BIGGER).image(new Image("githubw.png"))
+				.title("Open GitHub").textSize(TextSize.BIGGER).image(new Image("images/githubw.png"))
 				// .backgroundColor(Color.TRANSPARENT)
 				.build();
 	}
@@ -1390,7 +1588,9 @@ public class dataWarehousingController {
 					Platform.runLater(() -> {
 						saveVersion();
 						updateInfo();
-						
+						updateChangesTile();
+						updateLeaderBoard();
+
 						calendarTile.setChartData(getCalendarData());
 						numberTile.setValue(project.getNumberOfVersions());
 						storageTile.setValue(getSavedSpace());

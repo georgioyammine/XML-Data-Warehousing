@@ -1,5 +1,12 @@
 package application;
 
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+
 import eu.hansolo.fx.dotmatrix.DotMatrix;
 import eu.hansolo.fx.dotmatrix.DotMatrix.DotShape;
 import eu.hansolo.fx.dotmatrix.DotMatrixBuilder;
@@ -32,7 +39,6 @@ import eu.hansolo.tilesfx.TimeSection;
 import eu.hansolo.tilesfx.TimeSectionBuilder;
 import eu.hansolo.tilesfx.addons.Indicator;
 import eu.hansolo.tilesfx.chart.ChartData;
-import eu.hansolo.tilesfx.chart.MatrixFont;
 //import eu.hansolo.tilesfx.chart.RadarChartMode;
 //import eu.hansolo.tilesfx.chart.SunburstChart.TextOrientation;
 import eu.hansolo.tilesfx.chart.TilesFXSeries;
@@ -49,8 +55,6 @@ import eu.hansolo.tilesfx.weather.DarkSky.Language;
 import eu.hansolo.tilesfx.weather.DarkSky.Unit;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,18 +74,6 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-import java.text.NumberFormat;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -170,7 +162,7 @@ public class Demo extends Application {
 
     private long            lastTimerCall;
     private AnimationTimer  timer;
-    
+
 
 
     @Override public void init() {
@@ -541,14 +533,14 @@ public class Demo extends Application {
                                                        new Stop(0.67, Tile.LIGHT_RED),
                                                        new Stop(1.0, Tile.LIGHT_RED))
                                         .build();
-        /*
+
         radarChartTile1 = TileBuilder.create().skinType(SkinType.RADAR_CHART)
                                      .prefSize(TILE_WIDTH, TILE_HEIGHT)
                                      .minValue(0)
                                      .maxValue(50)
                                      .title("RadarChart Sector")
                                      .unit("Unit")
-                                     .radarChartMode(RadarChartMode.SECTOR)
+//                                     .radarChartMode(RadarChartMode.SECTOR)
                                      .gradientStops(new Stop(0.00000, Color.TRANSPARENT),
                                                     new Stop(0.00001, Color.web("#3552a0")),
                                                     new Stop(0.09090, Color.web("#456acf")),
@@ -566,32 +558,32 @@ public class Demo extends Application {
                                      .tooltipText("")
                                      .animated(true)
                                      .build();
-        radarChartTile2 = TileBuilder.create().skinType(SkinType.RADAR_CHART)
-                                     .prefSize(TILE_WIDTH, TILE_HEIGHT)
-                                     .minValue(0)
-                                     .maxValue(50)
-                                     .title("RadarChart Polygon")
-                                     .unit("Unit")
-                                     .radarChartMode(RadarChartMode.POLYGON)
-                                     .gradientStops(new Stop(0.00000, Color.TRANSPARENT),
-                                                    new Stop(0.00001, Color.web("#3552a0")),
-                                                    new Stop(0.09090, Color.web("#456acf")),
-                                                    new Stop(0.27272, Color.web("#45a1cf")),
-                                                    new Stop(0.36363, Color.web("#30c8c9")),
-                                                    new Stop(0.45454, Color.web("#30c9af")),
-                                                    new Stop(0.50909, Color.web("#56d483")),
-                                                    new Stop(0.72727, Color.web("#9adb49")),
-                                                    new Stop(0.81818, Color.web("#efd750")),
-                                                    new Stop(0.90909, Color.web("#ef9850")),
-                                                    new Stop(1.00000, Color.web("#ef6050")))
-                                     .text("Test")
-                                     .chartData(chartData1, chartData2, chartData3, chartData4,
-                                                chartData5, chartData6, chartData7, chartData8)
-                                     .tooltipText("")
-                                     .animated(true)
-                                     //.smoothing(true)
-                                     .build();
-        */
+//        radarChartTile2 = TileBuilder.create().skinType(SkinType.RADAR_CHART)
+//                                     .prefSize(TILE_WIDTH, TILE_HEIGHT)
+//                                     .minValue(0)
+//                                     .maxValue(50)
+//                                     .title("RadarChart Polygon")
+//                                     .unit("Unit")
+//                                     .radarChartMode(RadarChartMode.POLYGON)
+//                                     .gradientStops(new Stop(0.00000, Color.TRANSPARENT),
+//                                                    new Stop(0.00001, Color.web("#3552a0")),
+//                                                    new Stop(0.09090, Color.web("#456acf")),
+//                                                    new Stop(0.27272, Color.web("#45a1cf")),
+//                                                    new Stop(0.36363, Color.web("#30c8c9")),
+//                                                    new Stop(0.45454, Color.web("#30c9af")),
+//                                                    new Stop(0.50909, Color.web("#56d483")),
+//                                                    new Stop(0.72727, Color.web("#9adb49")),
+//                                                    new Stop(0.81818, Color.web("#efd750")),
+//                                                    new Stop(0.90909, Color.web("#ef9850")),
+//                                                    new Stop(1.00000, Color.web("#ef6050")))
+//                                     .text("Test")
+//                                     .chartData(chartData1, chartData2, chartData3, chartData4,
+//                                                chartData5, chartData6, chartData7, chartData8)
+//                                     .tooltipText("")
+//                                     .animated(true)
+//                                     //.smoothing(true)
+//                                     .build();
+
 
         radarChartTile1 = TileBuilder.create().skinType(SkinType.RADAR_CHART)
                                      .prefSize(TILE_WIDTH, TILE_HEIGHT)
@@ -1018,7 +1010,7 @@ public class Demo extends Application {
                                              flipTile, switchSliderTile, dateTile, calendarTile,
                                              matrixTile, radialPercentageTile, statusTile, barGaugeTile, imageTile
                                              ,radarChartTile1,radarChartTile2,dot );//, weatherTile);
-        				
+
 
         pane.setHgap(5);
         pane.setVgap(5);

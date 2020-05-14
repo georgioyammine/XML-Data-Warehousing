@@ -724,6 +724,7 @@ public class Demo extends Application {
                 .dotOffColor(Color.GRAY)
                 .dotShape(DotShape.ROUNDED_RECT)
                 .build();
+         dot.setPixel(5, 5, Color.RED);
 
 //         dot =
 //         new DotMatrix(TILE_WIDTH*2, TILE_HEIGHT, 20, 7, Color.BLUE, Color.GRAY, DotShape.ROUNDED_RECT,null);

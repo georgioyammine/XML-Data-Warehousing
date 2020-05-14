@@ -3,22 +3,22 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXCheckBox?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToggleButton?>
-<?import com.jfoenix.controls.JFXTabPane?>
 <?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" stylesheets="@all.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.dataWarehousingController">
+<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" stylesheets="@all.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.dataWarehousingController">
    <children>
       <JFXTabPane fx:id="mainTabPane" prefHeight="450.0" prefWidth="800.0">
          <tabs>
@@ -62,25 +62,38 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <JFXComboBox fx:id="versionBox" layoutX="146.0" layoutY="25.0" onAction="#versionBoxChanged" prefHeight="25.0" prefWidth="70.0" unFocusColor="#b2b2b2" stylesheets="@all.css"/>
+                        <JFXComboBox fx:id="versionBox" layoutX="146.0" layoutY="25.0" onAction="#versionBoxChanged" prefHeight="25.0" prefWidth="70.0" stylesheets="@all.css" unFocusColor="#b2b2b2" />
                         <JFXCheckBox fx:id="deltaOnly" checkedColor="#10279c" layoutX="573.0" layoutY="30.0" onAction="#updateDropBoxes" text="Changes only" textFill="#b2b2b2" unCheckedColor="#b2b2b2" />
                         <JFXToggleButton fx:id="advancedSearch" layoutX="343.0" layoutY="12.0" onAction="#toggleHandle" text="Advanced Search" textFill="#b2b2b2" toggleColor="#10279c" toggleLineColor="#2114b5c7" />
                         <JFXComboBox fx:id="filter1" layoutX="30.0" layoutY="81.0" onAction="#updateDropBoxes2" prefHeight="25.0" prefWidth="125.0" unFocusColor="#b2b2b2" />
                         <JFXComboBox fx:id="filter2" layoutX="165.0" layoutY="81.0" onAction="#updateDropBoxes3" prefHeight="25.0" prefWidth="125.0" unFocusColor="#b2b2b2" />
                         <JFXComboBox fx:id="filter3" layoutX="301.0" layoutY="81.0" onAction="#updateDropBoxes4" prefHeight="25.0" prefWidth="125.0" unFocusColor="#b2b2b2" />
                         <JFXComboBox fx:id="filter4" layoutX="437.0" layoutY="81.0" prefHeight="25.0" prefWidth="125.0" unFocusColor="#b2b2b2" />
-         
-                       
+
+
                         <JFXTextField fx:id="searchBar" layoutX="27.0" layoutY="81.0" prefHeight="38.0" prefWidth="547.0" stylesheets="@all.css" unFocusColor="#b2b2b2" />
                          <JFXButton fx:id="queryBtn" layoutX="615.0" layoutY="74.0" onAction="#queryHandle" prefHeight="39.0" prefWidth="123.0" text="Query" />
                          <TextArea fx:id="queryResult" layoutX="20.0" layoutY="146.0" prefHeight="224.0" prefWidth="761.0" stylesheets="@all.css" />
-                        
+
                      </children></AnchorPane>
                </content>
             </Tab>
             <Tab text="User">
                <content>
-                  <AnchorPane fx:id="anchorUser" prefHeight="389.0" prefWidth="799.0" />
+                  <AnchorPane fx:id="anchorUser" prefHeight="389.0" prefWidth="799.0">
+                     <children>
+                        <JFXButton fx:id="createBtn" layoutX="285.0" layoutY="115.0" onAction="#createUserHandle" prefHeight="50.0" prefWidth="171.0" text="Create New User" />
+                        <JFXComboBox fx:id="userBox" layoutX="303.0" layoutY="54.0" onAction="#userBoxHandle" prefHeight="26.0" prefWidth="135.0" unFocusColor="#b2b2b2" />
+                        <JFXTextField fx:id="newUserField" layoutX="281.0" layoutY="48.0" unFocusColor="#b2b2b2" />
+                        <JFXButton fx:id="addUserBtn" layoutX="504.0" layoutY="55.0" onAction="#addUserHandle" prefHeight="50.0" prefWidth="149.0" text="Add New User" />
+                        <Label fx:id="userVerifyLabel" layoutX="237.0" layoutY="14.0" prefHeight="18.0" prefWidth="267.0" textFill="#f00505" />
+                        <ImageView fx:id="userIcon" fitHeight="97.0" fitWidth="104.0" layoutX="103.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/user.png" />
+                           </image>
+                        </ImageView>
+                        <StackPane fx:id="dotMatrixPane" layoutX="15.0" layoutY="195.0" prefHeight="180.0" prefWidth="770.0" />
+                     </children></AnchorPane>
                </content>
             </Tab>
             <Tab text="About">

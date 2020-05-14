@@ -51,7 +51,7 @@ public class controllLoading {
     @FXML
     private ImageView imgLoading;
     static DataWarehousing project;
-    static String projectDir; 
+    static String projectDir;
     static Scene scene;
 	@FXML AnchorPane mainAnchor;
 	@FXML Text projectName;
@@ -82,15 +82,15 @@ public class controllLoading {
             }
         });
         lblClose.setOnMouseClicked((MouseEvent event) -> {
-        	
+
             Platform.exit();
             System.exit(0);
         });
         Minimise.setOnMouseClicked((MouseEvent event) -> {
         	((Stage) (vboxBottom.getScene().getWindow())).setIconified(true);
         });
-    }   
-    
+    }
+
     private void longStart() {
         dataWarehousingController.project = project;
 		dataWarehousingController.projectPath = projectDir;
@@ -103,11 +103,11 @@ public class controllLoading {
     					System.out.println("started");
     					long t1 = System.currentTimeMillis();
     					try {
-    					root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));   
+    					root = FXMLLoader.load(getClass().getResource("dataWarehousing.fxml"));
     					}catch(Exception e) {
 //    						e.printStackTrace();
     						Platform.runLater(new Runnable() {
-								
+
 								@Override
 								public void run() {
 									try {
@@ -115,9 +115,9 @@ public class controllLoading {
 									} catch (IOException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
-									}   
-			    					
-									
+									}
+
+
 								}
 							});
     					}
@@ -152,8 +152,8 @@ public class controllLoading {
 			stage.setMinHeight(350);
 			stage.setMinWidth(530);
 			window.hide();
-    		
+
         });
-            
-    } 
+
+    }
 }

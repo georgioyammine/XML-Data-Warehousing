@@ -385,6 +385,7 @@ public class dataWarehousingController<T> {
 							versionPath = projectPath + File.separator + "src" + File.separator + "available files"
 									+ File.separator + project.getName() + "_v" + data.getVersion() + ".xml";
 							versionBox.getSelectionModel().select(data.getVersion() - 1);
+							autoCompletePopup.hide();
 							File xmlFile = new File(versionPath);
 							// generateXPaths(xmlFile);
 
@@ -1220,7 +1221,7 @@ public class dataWarehousingController<T> {
 				possibleWordsSet.add("//" + nl.item(i).getNodeName());
 
 			autoCompletePopup.getSuggestions().addAll(possibleWordsSet);
-			autoCompletePopup.hide();
+			autoCompletePopup.show(searchBar);
 			autoCompletePopup.show(searchBar);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -1282,7 +1283,10 @@ public class dataWarehousingController<T> {
 	public void versionBoxChanged() throws Exception {
 		if (versionBox.getValue() == null)
 			return;
-		searchBar.setText("");
+		if(!searchBar.getText().isEmpty()) {
+			searchBar.clear();
+			autoCompletePopup.show(searchBar);
+		}
 		if ((int) versionBox.getValue() == 1) {
 			deltaOnly.setDisable(true);
 			deltaOnly.setSelected(false);

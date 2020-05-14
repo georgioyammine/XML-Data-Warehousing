@@ -12,6 +12,11 @@
 .tab-header-background {
 	-fx-background-color: -fx-primary;
 }
+#XDP_MAIN{
+    -fx-pref-width : 197;
+-fx-pref-height : 60;
+}
+
 .combo-box .list-cell {
 	-fx-text-fill: -fx-primarytext;
 }
@@ -114,4 +119,7 @@
     -fx-border-radius: 4px;
 }
 
+#aboutText: {
+    color: white;
+}
 

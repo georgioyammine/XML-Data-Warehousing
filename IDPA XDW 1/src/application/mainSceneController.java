@@ -296,22 +296,10 @@ public class mainSceneController {
 	@FXML
 	public void getDiff() {
 		try {
-			if(processDiff.isRunning()) {
-				System.out.println(processDiff.cancel());
-				processDiff.reset();
-				diffBtn.setText("Get Diff");
-			}
-			else {
 			processDiff.restart();
 			progressBar1.progressProperty().bind(XMLDiffAndPatch.getProgressProperty());
-			if(processDiff.isRunning()) {
-				diffBtn.setText("Cancel");
-			}
-			}
-		} catch (Throwable e) {
-			System.out.println("HELP"+e.getLocalizedMessage());
-			e.printStackTrace(System.err);
-			e.printStackTrace();
+		} catch (Exception e) {
+//			e.printStackTrace();
 		}
 
 	}
@@ -323,7 +311,6 @@ public class mainSceneController {
 			return new Task<Void>() {
 				@Override
 				public Void call() throws Exception {
-					 while(!isCancelled()){
 					double t1 = System.currentTimeMillis();
 					ArrayList<String> result = XMLDiffAndPatch.TEDandEditScript(abs1Diff.getText(), abs2Diff.getText(),
 							reversible.isSelected());
@@ -334,8 +321,7 @@ public class mainSceneController {
 						diffPath.setText(result.get(2));
 						Toolkit.getDefaultToolkit().beep();
 					});
-					return null;
-					}
+
 					return null;
 				}
 			};

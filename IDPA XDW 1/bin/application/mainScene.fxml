@@ -16,7 +16,7 @@
    <children>
       <JFXTabPane prefHeight="450.0" prefWidth="800.0">
          <tabs>
-            <Tab styleClass="C:\Users\user\Desktop\GUI\all.css" text="Get Diff">
+            <Tab  id="XDP_MAIN" styleClass="C:\Users\user\Desktop\GUI\all.css" text="Get Diff">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="800.0">
                      <children>
@@ -33,7 +33,7 @@
                   </AnchorPane>
               </content>
             </Tab>
-            <Tab text="Reverse Diff">
+            <Tab id="XDP_MAIN" text="Reverse Diff">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="800.0">
                      <children>
@@ -47,7 +47,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="Apply Patch">
+            <Tab id="XDP_MAIN" text="Apply Patch">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="800.0">
                      <children>
@@ -64,7 +64,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab onSelectionChanged="#setDefaultCosts" text="About">
+            <Tab id="XDP_MAIN" onSelectionChanged="#setDefaultCosts" text="About">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>

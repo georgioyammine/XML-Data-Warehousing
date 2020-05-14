@@ -145,7 +145,7 @@ public class controllLoading {
     		}
 			stage.setScene(scene);
 			Stage window = (Stage) (vboxBottom.getScene().getWindow());
-			stage.setOnHidden(event2 -> Platform.exit());
+//			stage.setOnHidden(event2 -> Platform.exit());
 			stage.setResizable(true);
 			stage.show();
 			stage.setWidth(850);

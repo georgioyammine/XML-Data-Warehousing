@@ -260,14 +260,15 @@ public class welcomeController {
 			
 			Stage splash  = new Stage();
 			Stage stage = (Stage)  (recentTable.getScene().getWindow());
-			Platform.setImplicitExit(false);
+//			Platform.setImplicitExit(false);
 			Scene scene = new Scene(root);
 			splash.setScene(scene);
 	        splash.initStyle(StageStyle.UNDECORATED);
 //	        splash.setOnHiding(event2 -> Platform.exit());
 	    	stage.setOnHidden(null);
-	    	stage.hide();
+	    	
 	        splash.show();
+	        stage.hide();
 		}
 	}
 
@@ -342,7 +343,7 @@ public class welcomeController {
 
 			Stage splash  = new Stage();
 			Stage stage = (Stage)  (recentTable.getScene().getWindow());
-			Platform.setImplicitExit(false);
+//			Platform.setImplicitExit(false);
 			Scene scene = new Scene(root);
 			splash.setScene(scene);
 	        splash.initStyle(StageStyle.UNDECORATED);

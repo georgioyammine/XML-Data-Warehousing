@@ -58,6 +58,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTabPane;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import com.jfoenix.controls.JFXToggleButton;
 import com.jfoenix.controls.JFXTreeTableView;
@@ -348,7 +349,6 @@ public class dataWarehousingController<T> {
 							}
 
 							Data data = getTableView().getItems().get(getIndex());
-							System.out.println("get data: " + data);
 							Toolkit.getDefaultToolkit().beep();
 						});
 					}
@@ -384,7 +384,6 @@ public class dataWarehousingController<T> {
 
 							versionPath = projectPath + File.separator + "src" + File.separator + "available files"
 									+ File.separator + project.getName() + "_v" + data.getVersion() + ".xml";
-							System.out.println(versionPath);
 							versionBox.getSelectionModel().select(data.getVersion() - 1);
 							File xmlFile = new File(versionPath);
 							// generateXPaths(xmlFile);
@@ -527,7 +526,6 @@ public class dataWarehousingController<T> {
 		initializeContribution();
 
 		Platform.runLater(() -> {
-			System.out.println(homeTab.getScene());
 			authorTile.widthProperty().addListener((obs, oldVal, newVal) -> {
 				if (matrixTile != null) {
 					matrixTile.setChartData(getWeeklyData());
@@ -577,8 +575,10 @@ public class dataWarehousingController<T> {
 
 	@FXML
 	public void userBoxHandle() {
-		updateContributionData();
-		System.out.println("Box Changed");
+		tooltip.hide();
+		service.cancel();
+		initializeContribution();
+//		updateContributionData();
 	}
 
 	@FXML
@@ -727,7 +727,6 @@ public class dataWarehousingController<T> {
 		while (it.hasNext()) {
 			Map.Entry<String, Integer> pair = (Map.Entry) it.next();
 			leaderArl.add(new LeaderBoardItem(pair.getKey(), pair.getValue()));
-			System.out.println(pair.getKey() + " = " + pair.getValue());
 			it.remove(); // avoids a ConcurrentModificationException
 		}
 		Collections.sort(leaderArl, new Comparator<LeaderBoardItem>() {
@@ -893,9 +892,42 @@ public class dataWarehousingController<T> {
 
 		queryResult.prefWidthProperty().bind(mainTabPane.widthProperty().subtract(38));
 		queryResult.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60).subtract(165));
+		
+		userIcon.setLayoutX(0);
+		userIcon.translateXProperty().bind(userBox.translateXProperty().add(-150));
 
+		userBox.setLayoutX(0);
+		userBox.translateXProperty().bind(anchorUser.widthProperty().multiply(0.5).add(userBox.widthProperty().divide(2).negate()));
+
+		userVerifyLabel.setLayoutX(0);
+		userVerifyLabel.translateXProperty().bind(anchorUser.widthProperty().multiply(0.5).add(userVerifyLabel.widthProperty().divide(2).negate()));
+
+		newUserField.setLayoutX(0);
+		newUserField.translateXProperty().bind(anchorUser.widthProperty().multiply(0.5).add(newUserField.widthProperty().divide(2).negate()));
+
+		createBtn.setLayoutX(0);
+		createBtn.translateXProperty().bind(anchorUser.widthProperty().multiply(0.5).add(createBtn.widthProperty().divide(2).negate()));
+		
+		addUserBtn.setLayoutX(0);
+		addUserBtn.translateXProperty().bind(userBox.translateXProperty().add(232));
+
+		dotMatrixPane.setLayoutX(0);
+		dotMatrixPane.translateXProperty().bind(anchorUser.widthProperty().multiply(0.5).add(dotMatrixPane.widthProperty().divide(2).negate()));
+		
+		aboutTab.prefWidthProperty().bind(mainTabPane.widthProperty());
+		aboutTab.prefHeightProperty().bind(mainTabPane.heightProperty().subtract(60));
+		
+		aboutTitle.setLayoutX(0);
+		aboutTitle.translateXProperty().bind((anchorUser.widthProperty()).add(208).divide(2).add(aboutTitle.widthProperty().divide(2).negate()));
+		aboutText.prefWidthProperty().bind(anchorUser.widthProperty().add(-260));
+//		aboutText.setLayoutX(0);
+//		aboutText.translateXProperty().bind((anchorUser.widthProperty().add(-208)).divide(2).add(aboutText.widthProperty().divide(2).negate()));
+		
 	}
-
+	@FXML Label aboutTitle;
+	@FXML JFXTextArea aboutText;
+	@FXML AnchorPane aboutTab;
+	
 	private void initializeNumberTile() {
 		numberTile = TileBuilder.create().skinType(SkinType.NUMBER).prefSize(TILE_WIDTH, TILE_HEIGHT)
 				.title("Number of Versions").textSize(TextSize.BIGGER)
@@ -929,7 +961,6 @@ public class dataWarehousingController<T> {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println(projectPath);
 		});
 		gitHubTile.setOnMouseClicked(event -> {
 			try {
@@ -963,9 +994,12 @@ public class dataWarehousingController<T> {
 			try {
 				Parent root = FXMLLoader.load(getClass().getResource("mainScene.fxml"));
 				Scene scene = new Scene(root, 800, 450);
-				Stage window = (Stage) ((tableview.getScene().getWindow()));
+				Stage window = new Stage();
+				window.setTitle("XDP: XML Diff and Patch");
+				window.getIcons().add(new Image("icon-main@3x.png"));
 				window.setResizable(false);
 				window.setScene(scene);
+				window.show();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1109,7 +1143,6 @@ public class dataWarehousingController<T> {
 	}
 
 	private void updateSuggestionsAttr(String text) {
-		System.out.println("Entered suggestionsAtr");
 		try {
 			if (text.length() > 2) {
 				autoCompletePopup.getSuggestions().clear();
@@ -1126,7 +1159,6 @@ public class dataWarehousingController<T> {
 
 				autoCompletePopup.getSuggestions().addAll(possibleWordsSet);
 				autoCompletePopup.show(searchBar);
-				System.out.println(possibleWordsSet);
 				System.out.println("Attributes:" + expression);
 			}
 		} catch (Exception e) {
@@ -1250,6 +1282,7 @@ public class dataWarehousingController<T> {
 	public void versionBoxChanged() throws Exception {
 		if (versionBox.getValue() == null)
 			return;
+		searchBar.setText("");
 		if ((int) versionBox.getValue() == 1) {
 			deltaOnly.setDisable(true);
 			deltaOnly.setSelected(false);
@@ -1467,7 +1500,6 @@ public class dataWarehousingController<T> {
 
 					NodeList nodeList = (NodeList) xPath.compile(expression.toString()).evaluate(doc,
 							XPathConstants.NODESET);
-					System.out.println(nodeList.getLength());
 					Document newXmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 					Element root = newXmlDocument.createElement("Results");
 					newXmlDocument.appendChild(root);
@@ -1485,7 +1517,6 @@ public class dataWarehousingController<T> {
 					transformer.transform(source, result);
 					String xmlString = result.getWriter().toString();
 					queryResult.setText(xmlString.substring(55));
-					System.out.println("Hi");
 					// getTreeView(xmlString);
 
 				} catch (Exception e) {
@@ -1493,7 +1524,23 @@ public class dataWarehousingController<T> {
 					queryResult.setText("Query Invalid!");
 				}
 			} else {
+				// handle querying all the version
 
+				Document newXmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+				Element root = (Element) (project
+						.getThisVersionAsNode(project.versions.get((int) versionBox.getValue() - 1)));
+				newXmlDocument.appendChild(newXmlDocument.importNode(root,true));
+
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+				// initialize StreamResult with File object to save to file
+				StreamResult result = new StreamResult(new StringWriter());
+				DOMSource source = new DOMSource(newXmlDocument);
+				transformer.transform(source, result);
+				String xmlString = result.getWriter().toString();
+				queryResult.setText(xmlString.substring(55));
 			}
 		} else {
 			String expression = searchBar.getText();
@@ -1514,7 +1561,6 @@ public class dataWarehousingController<T> {
 					// System.out.println(node + " " + dotRep);
 				}
 				sb.delete(sb.length() - 3, sb.length());
-				System.out.println(sb.toString());
 
 				String diffPath = projectPath + File.separator + getDiffRelativePath((int) versionBox.getValue());
 				Node reversedDiff = XMLDiffAndPatch.reverseXMLESNode(diffPath);
@@ -1578,7 +1624,6 @@ public class dataWarehousingController<T> {
 
 				NodeList nodeList = (NodeList) xPath.compile(expression).evaluate(queryingVersionRoot,
 						XPathConstants.NODESET);
-				System.out.println(nodeList.getLength());
 				Document newXmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 				Element root = newXmlDocument.createElement("Results");
 				newXmlDocument.appendChild(root);
@@ -1611,9 +1656,6 @@ public class dataWarehousingController<T> {
 		node = stack.pop();
 		StringBuilder sb = new StringBuilder("B");
 		while (!stack.isEmpty()) {
-			System.out.println(node);
-			System.out.println(stack);
-			System.out.println(sb);
 			NodeList nodeList = node.getChildNodes();
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				if (nodeList.item(i).isEqualNode(stack.peek())) {
@@ -1622,7 +1664,6 @@ public class dataWarehousingController<T> {
 					break;
 				}
 			}
-			System.out.println(sb);
 		}
 		return sb.toString();
 	}
@@ -1636,7 +1677,6 @@ public class dataWarehousingController<T> {
 
 		if (file != null) {
 			currentPath = file.getAbsoluteFile().getParent();
-			System.out.println("add version");
 			processAddVersion.restart();
 			// project.addNewVersion(project.getOwner(), file.getAbsolutePath());
 
@@ -1664,6 +1704,9 @@ public class dataWarehousingController<T> {
 							calendarTile.setChartData(getCalendarData());
 							numberTile.setValue(project.getNumberOfVersions());
 							storageTile.setValue(getSavedSpace());
+							tooltip.hide();
+							service.cancel();
+							initializeContribution();
 						});
 					}
 					return null;
@@ -1713,7 +1756,6 @@ public class dataWarehousingController<T> {
 		NodeList nodeList = root.getChildNodes();
 		for (int i = 0; i < nodeList.getLength(); i++)
 			System.out.println(nodeList.item(i).getNodeName());
-		System.out.println("Hi");
 	}
 
 	private static Document convertStringToXMLDocument(String xmlString) {
@@ -1738,7 +1780,7 @@ public class dataWarehousingController<T> {
 	private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MMM");
 	private static final DateTimeFormatter WEEKDAY_FORMATTER = DateTimeFormatter.ofPattern("E");
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-	private static final long TOOLTIP_TIMEOUT = 2000;
+	private static final long TOOLTIP_TIMEOUT = 1500;
 	private GridPane months;
 	private GridPane weekdays;
 	private Tooltip tooltip;
@@ -1759,6 +1801,8 @@ public class dataWarehousingController<T> {
 	int weeks;
 
 	public void initializeContribution() {
+		
+		
 		service = new ProcessService();
 		service.setOnSucceeded(e -> {
 			tooltip.hide();
@@ -1793,20 +1837,37 @@ public class dataWarehousingController<T> {
 
 		weekdays = new GridPane();
 		for (int i = 0; i < 7; i++) {
+			if(i%2 != 0) {
 			Label dayLabel = new Label(WEEKDAY_FORMATTER.format(startDate.plusDays(i)));
-			dayLabel.setFont(Font.font(6));
+			dayLabel.setFont(Font.font(9));
 			weekdays.add(dayLabel, 0, i);
 			GridPane.setVgrow(dayLabel, Priority.ALWAYS);
 			GridPane.setValignment(dayLabel, VPos.CENTER);
+			}
+			else {
+				Label dayLabel = new Label("");
+				if(i==0)
+					dayLabel.setFont(Font.font(10));
+				if(i==2)
+					dayLabel.setFont(Font.font(4));
+				if(i==4)
+					dayLabel.setFont(Font.font(2.5));
+				weekdays.add(dayLabel, 0, i);
+				GridPane.setVgrow(dayLabel, Priority.ALWAYS);
+				GridPane.setValignment(dayLabel, VPos.CENTER);
+			}
 		}
 
-		tooltip = new Tooltip("");
+		
 
 		matrix = DotMatrixBuilder.create().prefSize(600, 80).colsAndRows(weeks, 7).useSpacer(true)
 				// .spacerSizeFactor(0.1)
 				.dotShape(DotShape.SQUARE).dotOffColor(Color.web("#EEEEEE")).build();
+		
+		tooltip = new Tooltip("");
 		Tooltip.install(matrix, tooltip);
-
+	
+		
 		matrix.setOnDotMatrixEvent(e -> {
 
 			DataC selectedData = dataList.stream().filter(data -> data.x == e.getX() && data.y == e.getY()).findFirst()
@@ -1815,8 +1876,8 @@ public class dataWarehousingController<T> {
 					&& selectedData.getDate().isBefore(now.plusDays(1))) {
 				StringBuilder tooltipText = new StringBuilder();
 				tooltipText.append("Date : ").append(DATE_FORMATTER.format(selectedData.getDate())).append("\n")
-						.append("Value: ")
-						.append(null == selectedData ? "-" : String.format(Locale.US, "%.1f", selectedData.getValue()));
+						.append("Contributions : ")
+						.append(null == selectedData ? "-" :  ""+(int)selectedData.getValue());
 				tooltip.setText(tooltipText.toString());
 				tooltip.setX(e.getMouseScreenX());
 				tooltip.setY(e.getMouseScreenY());
@@ -1828,6 +1889,7 @@ public class dataWarehousingController<T> {
 				service.start();
 			}
 		});
+		
 		legend = new HBox(5, new Text("Less"), new Rectangle(10, 10, colorCoding.get(0.0)),
 				new Rectangle(10, 10, colorCoding.get(0.9)), new Rectangle(10, 10, colorCoding.get(1.9)),
 				new Rectangle(10, 10, colorCoding.get(2.9)), new Rectangle(10, 10, colorCoding.get(3.9)),
@@ -1857,6 +1919,7 @@ public class dataWarehousingController<T> {
 		pane2.setBottomAnchor(legend, 10d);
 
 		dotMatrixPane.getChildren().add(pane2);
+//		dotMatrixPane.setStyle("-fx-background-radius : 4px");
 
 	}
 
@@ -1874,7 +1937,6 @@ public class dataWarehousingController<T> {
 			}
 
 		}
-		System.out.println(contrMap);
 		dataList = new ArrayList<>(weeks * 7);
 		for (int x = 0; x < weeks; x++) {
 			for (int y = 0; y < 7; y++) {
@@ -1884,7 +1946,6 @@ public class dataWarehousingController<T> {
 					value = contrMap.get(date);
 				if (date.isAfter(now)) {
 					matrix.setPixel(x, y, Color.WHITE);
-					System.out.println("WWW");
 				} else {
 					dataList.add(new DataC(x, y, value, date));
 					matrix.setPixel(x, y, getColor(value));
@@ -1900,23 +1961,23 @@ public class dataWarehousingController<T> {
 				.get(colorCoding.keySet().stream().filter(threshold -> VALUE > threshold).findFirst().orElse(0.0));
 	}
 
-	private void recalcSize(final Scene SCENE) {
-		double width = SCENE.getWidth();
-		double height = SCENE.getHeight();
-		double offsetX = (width - matrix.getWidth()) * 0.5;
-		double offsetY = (height - matrix.getHeight()) * 0.5;
-
-		AnchorPane.setRightAnchor(months, offsetX);
-		AnchorPane.setLeftAnchor(months, offsetX);
-		AnchorPane.setTopAnchor(months, offsetY - 20);
-
-		AnchorPane.setLeftAnchor(weekdays, offsetX - 10);
-		AnchorPane.setTopAnchor(weekdays, offsetY);
-		AnchorPane.setBottomAnchor(weekdays, offsetY);
-
-		AnchorPane.setBottomAnchor(legend, offsetY - 20);
-
-	}
+//	private void recalcSize(final Scene SCENE) {
+//		double width = SCENE.getWidth();
+//		double height = SCENE.getHeight();
+//		double offsetX = (width - matrix.getWidth()) * 0.5;
+//		double offsetY = (height - matrix.getHeight()) * 0.5;
+//
+//		AnchorPane.setRightAnchor(months, offsetX);
+//		AnchorPane.setLeftAnchor(months, offsetX);
+//		AnchorPane.setTopAnchor(months, offsetY - 20);
+//
+//		AnchorPane.setLeftAnchor(weekdays, offsetX - 10);
+//		AnchorPane.setTopAnchor(weekdays, offsetY);
+//		AnchorPane.setBottomAnchor(weekdays, offsetY);
+//
+//		AnchorPane.setBottomAnchor(legend, offsetY - 20);
+//
+//	}
 
 	// Scene scene = new Scene(pane);
 	// scene.widthProperty().addListener(o -> recalcSize(scene));

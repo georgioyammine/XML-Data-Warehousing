@@ -24,7 +24,6 @@ public class welcomeLauncher extends Application {
 
 		Scene scene = new Scene(root);
 //		new JMetro(scene, Style.DARK);
-		System.out.println("aa"+launchName);
 		stage.setScene(scene);
 		if(launchName.equals("loadingScreen.fxml"))
 			stage.initStyle(StageStyle.UNDECORATED);

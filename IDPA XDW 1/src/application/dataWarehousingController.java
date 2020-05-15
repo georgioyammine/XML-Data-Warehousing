@@ -969,6 +969,19 @@ public class dataWarehousingController<T> {
 				e.printStackTrace();
 			}
 		});
+		changesTile.setOnMouseClicked(event -> {
+			try {
+				if(project.versions.size()>1) {
+					advancedSearch.setSelected(false);
+					versionBox.getSelectionModel().select(project.versions.size()-1);
+					deltaOnly.setSelected(true);
+					queryHandle();
+				}
+				mainTabPane.getSelectionModel().select(2);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 		gitHubTile.setOnMouseClicked(event -> {
 			try {
 				Desktop.getDesktop().browse(url.toURI());
@@ -1713,7 +1726,7 @@ public class dataWarehousingController<T> {
 							updateInfo();
 							updateChangesTile();
 							updateLeaderBoard2(owner);
-
+							advancedSearch.setSelected(false);
 							calendarTile.setChartData(getCalendarData());
 							numberTile.setValue(project.getNumberOfVersions());
 							storageTile.setValue(getSavedSpace());

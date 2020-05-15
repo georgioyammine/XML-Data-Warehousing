@@ -503,8 +503,8 @@ public class dataWarehousingController<T> {
 
 		System.out.println("Initialization: " + (System.currentTimeMillis() - start) + "ms");
 
-		TileBuilder.create().skinType(SkinType.PERCENTAGE).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Percentage Tile")
-				.unit("%").description("Test").maxValue(60).build();
+//		TileBuilder.create().skinType(SkinType.PERCENTAGE).prefSize(TILE_WIDTH, TILE_HEIGHT).title("Percentage Tile")
+//				.unit("%").description("Test").maxValue(60).build();
 
 		clockTile = TileBuilder.create().skinType(SkinType.CLOCK).textSize(TextSize.BIGGER)
 				.prefSize(TILE_WIDTH, TILE_HEIGHT).title("Clock Tile").running(true).build();
@@ -555,7 +555,7 @@ public class dataWarehousingController<T> {
 			userSet.add(project.versions.get(i).getOwner());
 		}
 		userBox.getItems().addAll(userSet);
-		userBox.getSelectionModel().select(0);
+		userBox.getSelectionModel().select(project.getOwner());
 	}
 
 	@FXML
@@ -625,6 +625,7 @@ public class dataWarehousingController<T> {
 	}
 
 	private void updateChangesTile() {
+		if(project.versions.size() > 1) {
 		String diffPath = projectPath + File.separator + getDiffRelativePath((int) project.versions.size());
 		Node reversedDiff = XMLDiffAndPatch.reverseXMLESNode(diffPath);
 		reversedDiff = ((Element) reversedDiff).getElementsByTagName("Edit_Script").item(0);
@@ -651,7 +652,7 @@ public class dataWarehousingController<T> {
 		if (insert != null) {
 			changesTile.setRightValue(insert.getChildNodes().getLength());
 		}
-
+		}
 	}
 
 	private ArrayList<FileTime> getVersionsLastAccessedTime() {
@@ -718,6 +719,7 @@ public class dataWarehousingController<T> {
 
 	private void updateLeaderBoard() {
 		leaderMap = new HashMap<String, Integer>();
+		leaderMap.put(project.getOwner(), 0);
 		for (Version v : project.versions) {
 			if (leaderMap.containsKey(v.getOwner()))
 				leaderMap.put(v.getOwner(), leaderMap.get(v.getOwner()) + 1);
@@ -738,16 +740,19 @@ public class dataWarehousingController<T> {
 				return (int) (o2.getValue() - o1.getValue());
 			}
 		});
-
 		leaderBoardTile.setLeaderBoardItems(leaderArl);
+
 	}
 
 	private void updateLeaderBoard2(String author) {
 		for (LeaderBoardItem item : leaderBoardTile.getLeaderBoardItems()) {
-			if (item.getName().equals(author))
+			if (item.getName().equals(author)) {
 				item.setValue(item.getValue() + 1);
+				return;
+			}
 		}
-
+		// not working
+//		leaderBoardTile.getLeaderBoardItems().add(new LeaderBoardItem(userBox.getValue(),1));
 	}
 
 	private ArrayList<ChartData> getWeeklyData() {
@@ -1036,7 +1041,8 @@ public class dataWarehousingController<T> {
 						new Stop(0.6, Bright.GREEN_YELLOW), new Stop(0.7, Bright.GREEN),
 						new Stop(0.8, Bright.BLUE_GREEN), new Stop(1.0, Dark.BLUE))
 				.strokeWithGradient(true).animated(true).build();
-		// storageTile.setValue(spaceSaved);
+		if(spaceSaved>0)
+			storageTile.setValue(spaceSaved);
 		// System.out.println(spaceSaved);
 	}
 
@@ -1709,6 +1715,7 @@ public class dataWarehousingController<T> {
 							calendarTile.setChartData(getCalendarData());
 							numberTile.setValue(project.getNumberOfVersions());
 							storageTile.setValue(getSavedSpace());
+							matrixTile.setChartData(getWeeklyData());
 							tooltip.hide();
 							service.cancel();
 							initializeContribution();

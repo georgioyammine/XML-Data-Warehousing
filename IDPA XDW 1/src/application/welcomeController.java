@@ -289,7 +289,7 @@ public class welcomeController {
 			verified = false;
 		}
 		if(authorId.getText().isEmpty()) {
-			sb.append("Error: Project Name Invalid! \n");
+			sb.append("Error: Author Name Invalid! \n");
 			verified = false;
 		}
 		if(!passId.getText().equals(confPassId.getText())) {

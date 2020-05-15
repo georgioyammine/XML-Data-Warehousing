@@ -982,6 +982,7 @@ public class dataWarehousingController<T> {
 				Parent root = FXMLLoader.load(getClass().getResource("welcomeScreen.fxml"));
 				Scene scene = new Scene(root, 800, 450);
 				Stage window = (Stage) ((tableview.getScene().getWindow()));
+				window.setMaximized(false);
 				window.setResizable(false);
 				window.setScene(scene);
 			} catch (IOException e) {

@@ -262,6 +262,7 @@ public class welcomeController {
 			Stage stage = (Stage)  (recentTable.getScene().getWindow());
 //			Platform.setImplicitExit(false);
 			Scene scene = new Scene(root);
+			splash.getIcons().add(new Image("icon-main@3x.png"));
 			splash.setScene(scene);
 	        splash.initStyle(StageStyle.UNDECORATED);
 //	        splash.setOnHiding(event2 -> Platform.exit());
@@ -345,6 +346,7 @@ public class welcomeController {
 			Stage stage = (Stage)  (recentTable.getScene().getWindow());
 //			Platform.setImplicitExit(false);
 			Scene scene = new Scene(root);
+			splash.getIcons().add(new Image("icon-main@3x.png"));
 			splash.setScene(scene);
 	        splash.initStyle(StageStyle.UNDECORATED);
 //	        splash.setOnHiding(event -> Platform.exit());

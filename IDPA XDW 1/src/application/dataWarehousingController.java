@@ -315,7 +315,7 @@ public class dataWarehousingController<T> {
 	public void initialize() throws IOException {
 		long start = System.currentTimeMillis();
 		searchBar.setVisible(false);
-
+		
 		verCol.setCellValueFactory(new PropertyValueFactory<>("version"));
 		dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
 		sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
@@ -984,6 +984,7 @@ public class dataWarehousingController<T> {
 				Stage window = (Stage) ((tableview.getScene().getWindow()));
 				window.setMaximized(false);
 				window.setResizable(false);
+				window.setWidth(810);
 				window.setScene(scene);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

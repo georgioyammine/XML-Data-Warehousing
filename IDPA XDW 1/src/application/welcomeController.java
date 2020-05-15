@@ -80,6 +80,8 @@ public class welcomeController {
 
 	@FXML
 	public void initialize() {
+		passId.setVisible(false);
+		confPassId.setVisible(false);
 		dirPath.setText("");
 		errorMessage.setText("");
 		try {

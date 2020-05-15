@@ -122,7 +122,7 @@ public class controllLoading {
 							});
     					}
     					if(System.currentTimeMillis()-t1<2000)
-    						Thread.sleep(2000 - (System.currentTimeMillis()-t1));
+    						Thread.sleep(1850 - (System.currentTimeMillis()-t1));
     					return null;
     					}
     				};
@@ -139,6 +139,7 @@ public class controllLoading {
     		Scene scene = new Scene(root,850,450);
     		if(stage==null) {
     			stage = new Stage();
+    			stage.getIcons().add(new Image("icon-main@3x.png"));
     			stage.setTitle("XDW - XML Data Warehousing ");
     			// stage.getIcons().add(new Image("iconN (1).png"));
     			stage.getIcons().add(new Image("icon-main@3x.png"));

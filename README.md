@@ -14,7 +14,12 @@ Project and **runnable** **jar** file created in **eclipse**.
 
 **exe** created using **launch4j**.
 
+## Set as default app for .xdw files
+To set this app as the default for XML data warehousing projects (**.xdw**),File.xdw right click -> properties -> [open with:] -> Change -> select [XDW _ XML Data Warehouse.exe]. 
+![Default App](/images/DefaultApp.png)
 
+## Delete history
+To delete history(Recent/Pinned), delete **history.cfg** file.
 
 ## Preview
 ![Welcome Screen](/images/welcomeOpen.png)
@@ -28,10 +33,3 @@ Project and **runnable** **jar** file created in **eclipse**.
 ![User Screen](/images/User.png)
 ![About Screen](/images/About.png)
 
-## Set as default app for .xdw files
-To set this app as the default for XML data warehousing projects (.xdw),File.xdw right click -> properties -> [open with:] -> Change -> select [XDW _ XML Data Warehouse.exe]. 
-
-## Delete history
-![Default App](/images/DefaultApp.png)
-
-To delete history(Recent/Pinned), delete history.cfg file.

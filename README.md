@@ -15,6 +15,7 @@ exe created using launch4j.
 
 Application Images:
 
+<p align="center">
 ![Welcome Screen](/images/welcomeOpen.png)
 ![Welcome Screen Pinned](/images/welcomeOpenP.png)
 ![Welcome New](/images/welcomeNew.png)
@@ -25,6 +26,7 @@ Application Images:
 ![QueryC Screen](/images/QueryC.PNG)
 ![User Screen](/images/User.png)
 ![About Screen](/images/About.png)
+</p>
 
 To set this app as the default for XML data warehousing projects (.xdw),File.xdw right click -> properties -> [open with:] -> Change -> select [XDW _ XML Data Warehouse.exe]. 
 

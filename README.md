@@ -16,7 +16,7 @@ Tools Used: Java 8, JavaFX and FXML with JFoenix and TilesFX Libraries.
 ![Home Screen](/images/Home.png)
 ![Versions Screen](/images/Versions.png)
 ![QueryA Screen](/images/QueryA.png)
-![QueryC Screen](/images/QueryC.png)
+![QueryC Screen](/images/QueryC.PNG)
 ![User Screen](/images/User.png)
 ![About Screen](/images/About.png)
 ![Default App](/images/DefaultApp.png)

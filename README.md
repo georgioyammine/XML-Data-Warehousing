@@ -16,10 +16,10 @@ exe created using launch4j.
 Application Images:
 
 
-![Welcome Screen](/images/welcomeOpen.png) {align=center}
+![Welcome Screen](/images/welcomeOpen.png)
 ![Welcome Screen Pinned](/images/welcomeOpenP.png)
 ![Welcome New](/images/welcomeNew.png)
-![Loading Screen](/images/loading.png) {align=center}
+![Loading Screen](/images/loading.png)
 ![Home Screen](/images/Home.png)
 ![Versions Screen](/images/Versions.png)
 ![QueryA Screen](/images/QueryA.png)

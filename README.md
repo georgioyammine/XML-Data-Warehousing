@@ -16,6 +16,7 @@ Project and **runnable** **jar** file created in **eclipse**.
 
 ## Set as default app for .xdw files
 To set this app as the default for XML data warehousing projects (**.xdw**),File.xdw right click -> properties -> [open with:] -> Change -> select [XDW _ XML Data Warehouse.exe]. 
+
 ![Default App](/images/DefaultApp.png)
 
 ## Delete history

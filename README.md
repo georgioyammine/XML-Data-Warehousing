@@ -9,6 +9,12 @@ App Version: 1.1 - backward compatible with the older version.
 
 Tools Used: Java 8, JavaFX and FXML with JFoenix and TilesFX Libraries.
 
+Project and runnable jar file created in eclipse.
+
+exe created using launch4j.
+
+Application Images:
+
 ![Welcome Screen](/images/welcomeOpen.png)
 ![Welcome Screen Pinned](/images/welcomeOpenP.png)
 ![Welcome New](/images/welcomeNew.png)
@@ -19,4 +25,9 @@ Tools Used: Java 8, JavaFX and FXML with JFoenix and TilesFX Libraries.
 ![QueryC Screen](/images/QueryC.PNG)
 ![User Screen](/images/User.png)
 ![About Screen](/images/About.png)
+
+To set this app as the default for XML data warehousing projects (.xdw),File.xdw right click -> properties -> [open with:] -> Change -> select [XDW _ XML Data Warehouse.exe]. 
+
 ![Default App](/images/DefaultApp.png)
+
+To delete history(Recent/Pinned), delete history.cfg file.

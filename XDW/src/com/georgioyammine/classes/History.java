@@ -3,7 +3,6 @@ package com.georgioyammine.classes;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -74,11 +73,16 @@ public class History  implements Serializable {
 		}
 	}
 
-	@SuppressWarnings("resource")
+
 	public static History load(String filename) throws Exception{
 		History input = null;
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
-		input = (History) ois.readObject();
+//		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename));
+//		input = (History) ois.readObject();
+		
+		// read history files from older projects
+		Deserializer ois = new Deserializer();
+		input = (History) ois.deserialize(new FileInputStream(filename));
+
 		return input;
 	}
 	

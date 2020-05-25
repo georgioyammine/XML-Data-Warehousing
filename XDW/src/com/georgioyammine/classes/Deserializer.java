@@ -21,6 +21,7 @@ public class Deserializer {
         classMapping.put("application.DataWarehousing",DataWarehousing.class);
     	classMapping.put("application.Project",Project.class);
     	classMapping.put("application.Version",Version.class);
+    	classMapping.put("application.History",History.class);
     }
 
     public Object deserialize(FileInputStream in) {

@@ -998,6 +998,7 @@ public class dataWarehousingController<T> {
 					advancedSearch.setSelected(false);
 					versionBox.getSelectionModel().select(project.versions.size()-1);
 					deltaOnly.setSelected(true);
+					updateDropBoxes();
 					queryHandle();
 				}
 				mainTabPane.getSelectionModel().select(2);

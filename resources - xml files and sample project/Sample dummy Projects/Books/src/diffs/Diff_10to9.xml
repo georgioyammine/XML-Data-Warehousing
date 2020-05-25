@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="23" reversible="yes" similarity="68.49%" version="1.0">
+  <Original_File crc32="2750dba6" name="book4.xml"/>
+  <Patched_File crc32="44b1db38" name="Books_v9.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.4.6.1 type="Text_Node" with="B.4.6.1">
+        <Delete_Word>
+          <w1>In</w1>
+          <w2>post-apocalypse</w2>
+          <w3>England,</w3>
+          <w4>the</w4>
+          <w5>mysterious</w5>
+          <w6>agent</w6>
+          <w7>known</w7>
+          <w8>only</w8>
+          <w9>as</w9>
+          <w10>Oberon</w10>
+          <w11>helps</w11>
+          <w12>to</w12>
+          <w13>create</w13>
+          <w14>a</w14>
+          <w15>new</w15>
+          <w16>life</w16>
+          <w17>for</w17>
+          <w18>the</w18>
+          <w19>inhabitants</w19>
+          <w20>of</w20>
+          <w21>London.</w21>
+        </Delete_Word>
+      </A.4.6.1>
+      <A.6 type="Element_Node" with="B.6">
+        <Attributes>
+          <Update_Attribute>
+            <lang change="both" newKey="language" newValue="french" oldValue="fr"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.6>
+    </Update>
+  </Edit_Script>
+</XDP_Patch>

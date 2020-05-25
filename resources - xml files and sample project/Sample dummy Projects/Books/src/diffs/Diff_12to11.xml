@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="35" reversible="yes" similarity="37.5%" version="1.0">
+  <Original_File crc32="1a259b91" name="book2.xml"/>
+  <Patched_File crc32="92795feb" name="Books_v11.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.5 type="Element_Node" with="B.5">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk106" oldValue="bk105"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.5>
+      <A.5.1.1 type="Text_Node" with="B.5.1.1">
+        <Update_Word>
+          <w1 oldValue="Corets," with="w1">Randall,</w1>
+          <w2 oldValue="Eva" with="w2">Cynthia</w2>
+        </Update_Word>
+      </A.5.1.1>
+      <A.5.2.1 type="Text_Node" with="B.5.2.1">
+        <Update_Word>
+          <w1 oldValue="The" with="w1">Lover</w1>
+          <w2 oldValue="Sundered" with="w2">Birds</w2>
+        </Update_Word>
+        <Delete_Word>
+          <w3>Grail</w3>
+        </Delete_Word>
+      </A.5.2.1>
+      <A.5.3.1 type="Text_Node" with="B.5.3.1">
+        <Update_Word>
+          <w1 oldValue="Fantasy" with="w1">Romance</w1>
+        </Update_Word>
+      </A.5.3.1>
+      <A.5.4.1 type="Text_Node" with="B.5.4.1">
+        <Update_Word>
+          <w1 oldValue="5.95" with="w1">4.95</w1>
+        </Update_Word>
+      </A.5.4.1>
+      <A.5.5.1 type="Text_Node" with="B.5.5.1">
+        <Update_Word>
+          <w1 oldValue="2001-09-10" with="w1">2000-09-02</w1>
+        </Update_Word>
+      </A.5.5.1>
+      <A.5.6.1 type="Text_Node" with="B.5.6.1">
+        <Update_Word>
+          <w1 oldValue="The" with="w1">When</w1>
+          <w2 oldValue="two" with="w2">Carla</w2>
+          <w3 oldValue="daughters" with="w3">meets</w3>
+          <w4 oldValue="of" with="w4">Paul</w4>
+          <w5 oldValue="Maeve," with="w5">at</w5>
+          <w6 oldValue="half-sisters," with="w6">an</w6>
+          <w7 oldValue="battle" with="w7">ornithology</w7>
+          <w8 oldValue="one" with="w8">conference,</w8>
+          <w9 oldValue="another" with="w9">tempers</w9>
+          <w10 oldValue="for" with="w10">fly</w10>
+          <w11 oldValue="control" with="w11">as</w11>
+          <w12 oldValue="of" with="w12">feathers</w12>
+          <w13 oldValue="England." with="w13">get</w13>
+          <w14 oldValue="Sequel" with="w14">ruffled.</w14>
+        </Update_Word>
+        <Delete_Word>
+          <w15>to</w15>
+          <w16>Oberon's</w16>
+          <w17>Legacy.</w17>
+        </Delete_Word>
+      </A.5.6.1>
+    </Update>
+    <Insert>
+      <A.6>
+        <book id="bk107">
+          <author>Thurman, Paula</author>
+          <title>Splish Splash</title>
+          <genre>Romance</genre>
+          <price>4.95</price>
+          <publish_date>2000-11-02</publish_date>
+          <description>A deep sea diver finds true love twenty thousand leagues beneath the sea.</description>
+        </book>
+      </A.6>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

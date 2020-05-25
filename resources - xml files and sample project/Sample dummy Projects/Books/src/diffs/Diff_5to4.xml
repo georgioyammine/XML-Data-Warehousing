@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="9" reversible="yes" similarity="82.69%" version="1.0">
+  <Original_File crc32="44b1db38" name="book5.xml"/>
+  <Patched_File crc32="2750dba6" name="Books_v4.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.6 type="Element_Node" with="B.6">
+        <Attributes>
+          <Update_Attribute>
+            <language change="both" newKey="lang" newValue="fr" oldValue="french"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.6>
+    </Update>
+    <Delete>
+      <A.4.6>
+        <description>Sequel to Maeve Ascendant.</description>
+      </A.4.6>
+    </Delete>
+    <Insert>
+      <A.4.6>
+        <description>In post-apocalypse England, the mysterious agent known only as Oberon helps to create a new life for the inhabitants of London. Sequel to Maeve Ascendant.</description>
+      </A.4.6>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

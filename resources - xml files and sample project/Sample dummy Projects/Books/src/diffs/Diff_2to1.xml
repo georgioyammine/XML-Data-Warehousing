@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="24" reversible="yes" similarity="36.84%" version="1.0">
+  <Original_File crc32="1a259b91" name="book2.xml"/>
+  <Patched_File crc32="d7ce095b" name="Books_v1.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.5 type="Element_Node" with="B.4">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk104" oldValue="bk105"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.5>
+      <A.5.2.1 type="Text_Node" with="B.4.2.1">
+        <Update_Word>
+          <w1 oldValue="The" with="w1">Oberon's</w1>
+          <w2 oldValue="Sundered" with="w2">Legacy</w2>
+        </Update_Word>
+        <Delete_Word>
+          <w3>Grail</w3>
+        </Delete_Word>
+      </A.5.2.1>
+      <A.5.5.1 type="Text_Node" with="B.4.5.1">
+        <Update_Word>
+          <w1 oldValue="2001-09-10" with="w1">2001-03-10</w1>
+        </Update_Word>
+      </A.5.5.1>
+    </Update>
+    <Delete>
+      <A.4 containedAT="B.4"/>
+      <A.5.6.1>The two daughters of Maeve, half-sisters, battle one another for control of England. Sequel to Oberon's Legacy.</A.5.6.1>
+    </Delete>
+    <Insert>
+      <A.4.6.1 containedAT="A.4.6.1"/>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

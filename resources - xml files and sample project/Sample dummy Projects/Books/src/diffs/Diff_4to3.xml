@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="6" reversible="yes" similarity="82.85%" version="1.0">
+  <Original_File crc32="2750dba6" name="book4.xml"/>
+  <Patched_File crc32="92795feb" name="Books_v3.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.6 type="Element_Node" with="B.6">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk107" oldValue="bk329"/>
+          </Update_Attribute>
+          <Delete_Attribute>
+            <lang>fr</lang>
+          </Delete_Attribute>
+        </Attributes>
+      </A.6>
+      <A.6.2.1 type="Text_Node" with="B.6.2.1">
+        <Delete_Word>
+          <w2>book</w2>
+        </Delete_Word>
+      </A.6.2.1>
+      <A.6.4.1 type="Text_Node" with="B.6.4.1">
+        <Update_Word>
+          <w1 oldValue="5.65" with="w1">4.95</w1>
+        </Update_Word>
+      </A.6.4.1>
+      <A.6.6 type="Element_Node" with="B.6.6">
+        <Label oldValue="summary">description</Label>
+      </A.6.6>
+    </Update>
+  </Edit_Script>
+</XDP_Patch>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="50" reversible="yes" similarity="30.55%" version="1.0">
+  <Original_File crc32="a8bd33ef" name="book6.xml"/>
+  <Patched_File crc32="44b1db38" name="Books_v5.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.7 type="Element_Node" with="B.4">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk104" oldValue="bk108"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.7>
+      <A.7.1.1 type="Text_Node" with="B.4.1.1">
+        <Update_Word>
+          <w1 oldValue="Knorr," with="w1">Corets,</w1>
+          <w2 oldValue="Stefan" with="w2">Eva</w2>
+        </Update_Word>
+      </A.7.1.1>
+      <A.7.2.1 type="Text_Node" with="B.4.2.1">
+        <Update_Word>
+          <w1 oldValue="Creepy" with="w1">Oberon's</w1>
+          <w2 oldValue="Crawlies" with="w2">Legacy</w2>
+        </Update_Word>
+      </A.7.2.1>
+      <A.7.3.1 type="Text_Node" with="B.4.3.1">
+        <Update_Word>
+          <w1 oldValue="Horror" with="w1">Fantasy</w1>
+        </Update_Word>
+      </A.7.3.1>
+      <A.7.4.1 type="Text_Node" with="B.4.4.1">
+        <Update_Word>
+          <w1 oldValue="4.95" with="w1">5.95</w1>
+        </Update_Word>
+      </A.7.4.1>
+      <A.7.5.1 type="Text_Node" with="B.4.5.1">
+        <Update_Word>
+          <w1 oldValue="2000-12-06" with="w1">2001-03-10</w1>
+        </Update_Word>
+      </A.7.5.1>
+      <A.7.6.1 type="Text_Node" with="B.4.6.1">
+        <Update_Word>
+          <w1 oldValue="An" with="w1">Sequel</w1>
+          <w2 oldValue="anthology" with="w2">to</w2>
+          <w3 oldValue="of" with="w3">Maeve</w3>
+          <w4 oldValue="horror" with="w4">Ascendant.</w4>
+        </Update_Word>
+        <Delete_Word>
+          <w5>stories</w5>
+          <w6>about</w6>
+          <w7>roaches,</w7>
+          <w8>centipedes,</w8>
+          <w9>scorpions</w9>
+          <w10>and</w10>
+          <w11>other</w11>
+          <w12>insects.</w12>
+        </Delete_Word>
+      </A.7.6.1>
+      <A.8 type="Element_Node" with="B.5">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk106" oldValue="bk109"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.8>
+      <A.8.1.1 type="Text_Node" with="B.5.1.1">
+        <Update_Word>
+          <w1 oldValue="Kress," with="w1">Randall,</w1>
+          <w2 oldValue="Peter" with="w2">Cynthia</w2>
+        </Update_Word>
+      </A.8.1.1>
+      <A.8.2.1 type="Text_Node" with="B.5.2.1">
+        <Update_Word>
+          <w1 oldValue="Paradox" with="w1">Lover</w1>
+          <w2 oldValue="Lost" with="w2">Birds</w2>
+        </Update_Word>
+      </A.8.2.1>
+      <A.8.3.1 type="Text_Node" with="B.5.3.1">
+        <Update_Word>
+          <w1 oldValue="Science" with="w1">Romance</w1>
+        </Update_Word>
+        <Delete_Word>
+          <w2>Fiction</w2>
+        </Delete_Word>
+      </A.8.3.1>
+      <A.8.4.1 type="Text_Node" with="B.5.4.1">
+        <Update_Word>
+          <w1 oldValue="6.95" with="w1">4.95</w1>
+        </Update_Word>
+      </A.8.4.1>
+      <A.8.5.1 type="Text_Node" with="B.5.5.1">
+        <Update_Word>
+          <w1 oldValue="2000-11-02" with="w1">2000-09-02</w1>
+        </Update_Word>
+      </A.8.5.1>
+      <A.8.6.1 type="Text_Node" with="B.5.6.1">
+        <Update_Word>
+          <w1 oldValue="After" with="w1">When</w1>
+          <w2 oldValue="an" with="w2">Carla</w2>
+          <w3 oldValue="inadvertant" with="w3">meets</w3>
+          <w4 oldValue="trip" with="w4">Paul</w4>
+          <w5 oldValue="through" with="w5">at</w5>
+          <w6 oldValue="a" with="w6">an</w6>
+          <w7 oldValue="Heisenberg" with="w7">ornithology</w7>
+          <w8 oldValue="Uncertainty" with="w8">conference,</w8>
+          <w9 oldValue="Device," with="w9">tempers</w9>
+          <w10 oldValue="James" with="w10">fly</w10>
+          <w11 oldValue="Salway" with="w11">as</w11>
+          <w12 oldValue="discovers" with="w12">feathers</w12>
+          <w13 oldValue="the" with="w13">get</w13>
+          <w14 oldValue="problems" with="w14">ruffled.</w14>
+        </Update_Word>
+        <Delete_Word>
+          <w15>of</w15>
+          <w16>being</w16>
+          <w17>quantum.</w17>
+        </Delete_Word>
+      </A.8.6.1>
+    </Update>
+    <Delete>
+      <A.4 containedAT="B.4"/>
+      <A.5 containedAT="B.5"/>
+      <A.6 containedAT="B.6"/>
+    </Delete>
+    <Insert>
+      <A.6 containedAT="A.6"/>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="11" reversible="yes" similarity="8.33%" version="1.0">
+  <Original_File crc32="11332a9" name="Project IDPA_v3.xml"/>
+  <Patched_File crc32="4c92f4b7" name="Project IDPA_v25.xml"/>
+  <Edit_Script>
+    <Update>
+      <A type="Element_Node" with="B">
+        <Label oldValue="a">company</Label>
+      </A>
+    </Update>
+    <Delete>
+      <A.1>
+        <b>
+          <c/>
+          <d/>
+        </b>
+      </A.1>
+    </Delete>
+    <Insert>
+      <A.1>
+        <staff id="1001">
+          <firstname>yong</firstname>
+          <lastname>mook<x/>kim</lastname>
+          <nickname>mkyong</nickname>
+          <salary>100000</salary>
+        </staff>
+      </A.1>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

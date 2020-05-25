@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="18" reversible="yes" similarity="40.0%" version="1.0">
+  <Original_File crc32="44b1db38" name="book5.xml"/>
+  <Patched_File crc32="a8bd33ef" name="Books_v8.xml"/>
+  <Edit_Script>
+    <Insert>
+      <A.7>
+        <book id="bk108">
+          <author>Knorr, Stefan</author>
+          <title>Creepy Crawlies</title>
+          <genre>Horror</genre>
+          <price>4.95</price>
+          <publish_date>2000-12-06</publish_date>
+          <description>An anthology of horror stories about roaches, centipedes, scorpions and other insects.</description>
+        </book>
+      </A.7>
+      <A.8>
+        <book id="bk109">
+          <author>Kress, Peter</author>
+          <title>Paradox Lost</title>
+          <genre>Science Fiction</genre>
+          <price>6.95</price>
+          <publish_date>2000-11-02</publish_date>
+          <description>After an inadvertant trip through a Heisenberg Uncertainty Device, James Salway discovers the problems of being quantum.</description>
+        </book>
+      </A.8>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

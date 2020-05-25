@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="49" reversible="yes" similarity="35.52%" version="1.0">
+  <Original_File crc32="92795feb" name="book3.xml"/>
+  <Patched_File crc32="1a259b91" name="Books_v14.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.5 type="Element_Node" with="B.4">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk104" oldValue="bk106"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.5>
+      <A.5.1.1 type="Text_Node" with="B.4.1.1">
+        <Update_Word>
+          <w1 oldValue="Randall," with="w1">Corets,</w1>
+          <w2 oldValue="Cynthia" with="w2">Eva</w2>
+        </Update_Word>
+      </A.5.1.1>
+      <A.5.2.1 type="Text_Node" with="B.4.2.1">
+        <Update_Word>
+          <w1 oldValue="Lover" with="w1">Oberon's</w1>
+          <w2 oldValue="Birds" with="w2">Legacy</w2>
+        </Update_Word>
+      </A.5.2.1>
+      <A.5.3.1 type="Text_Node" with="B.4.3.1">
+        <Update_Word>
+          <w1 oldValue="Romance" with="w1">Fantasy</w1>
+        </Update_Word>
+      </A.5.3.1>
+      <A.5.4.1 type="Text_Node" with="B.4.4.1">
+        <Update_Word>
+          <w1 oldValue="4.95" with="w1">5.95</w1>
+        </Update_Word>
+      </A.5.4.1>
+      <A.5.5.1 type="Text_Node" with="B.4.5.1">
+        <Update_Word>
+          <w1 oldValue="2000-09-02" with="w1">2001-03-10</w1>
+        </Update_Word>
+      </A.5.5.1>
+      <A.6 type="Element_Node" with="B.5">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk105" oldValue="bk107"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.6>
+      <A.6.1.1 type="Text_Node" with="B.5.1.1">
+        <Update_Word>
+          <w1 oldValue="Thurman," with="w1">Corets,</w1>
+          <w2 oldValue="Paula" with="w2">Eva</w2>
+        </Update_Word>
+      </A.6.1.1>
+      <A.6.2.1 type="Text_Node" with="B.5.2.1">
+        <Update_Word>
+          <w1 oldValue="Splish" with="w2">Sundered</w1>
+          <w2 oldValue="Splash" with="w3">Grail</w2>
+        </Update_Word>
+        <Insert_Word>
+          <w1>The</w1>
+        </Insert_Word>
+      </A.6.2.1>
+      <A.6.3.1 type="Text_Node" with="B.5.3.1">
+        <Update_Word>
+          <w1 oldValue="Romance" with="w1">Fantasy</w1>
+        </Update_Word>
+      </A.6.3.1>
+      <A.6.4.1 type="Text_Node" with="B.5.4.1">
+        <Update_Word>
+          <w1 oldValue="4.95" with="w1">5.95</w1>
+        </Update_Word>
+      </A.6.4.1>
+      <A.6.5.1 type="Text_Node" with="B.5.5.1">
+        <Update_Word>
+          <w1 oldValue="2000-11-02" with="w1">2001-09-10</w1>
+        </Update_Word>
+      </A.6.5.1>
+    </Update>
+    <Delete>
+      <A.4 containedAT="B.4"/>
+      <A.5.6.1>When Carla meets Paul at an ornithology conference, tempers fly as feathers get ruffled.</A.5.6.1>
+      <A.6.6>
+        <description>A deep sea diver finds true love twenty thousand leagues beneath the sea.</description>
+      </A.6.6>
+    </Delete>
+    <Insert>
+      <A.4.6.1 containedAT="A.4.6.1"/>
+      <A.5.6>
+        <description>The two daughters of Maeve, half-sisters, battle one another for control of England. Sequel to Oberon's Legacy.</description>
+      </A.5.6>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

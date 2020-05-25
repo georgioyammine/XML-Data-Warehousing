@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="153" reversible="yes" similarity="29.81%" version="1.0">
+  <Original_File crc32="203fcc8e" name="book7.xml"/>
+  <Patched_File crc32="a8bd33ef" name="Books_v6.xml"/>
+  <Edit_Script>
+    <Update>
+      <A.4.6.1 type="Text_Node" with="B.4.6.1">
+        <Delete_Word>
+          <w1>In</w1>
+          <w2>post-apocalypse</w2>
+          <w3>England,</w3>
+          <w4>the</w4>
+          <w5>mysterious</w5>
+          <w6>agent</w6>
+          <w7>known</w7>
+          <w8>only</w8>
+          <w9>as</w9>
+          <w10>Oberon</w10>
+          <w11>helps</w11>
+          <w12>to</w12>
+          <w13>create</w13>
+          <w14>a</w14>
+          <w15>new</w15>
+          <w16>life</w16>
+          <w17>for</w17>
+          <w18>the</w18>
+          <w19>inhabitants</w19>
+          <w20>of</w20>
+          <w21>London.</w21>
+        </Delete_Word>
+      </A.4.6.1>
+      <A.5 type="Element_Node" with="B.5">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk106" oldValue="bk105"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.5>
+      <A.5.2.1 type="Text_Node" with="B.5.2.1">
+        <Update_Word>
+          <w1 oldValue="The" with="w1">Lover</w1>
+          <w2 oldValue="Sundered" with="w2">Birds</w2>
+        </Update_Word>
+        <Delete_Word>
+          <w3>Grail</w3>
+        </Delete_Word>
+      </A.5.2.1>
+      <A.5.3.1 type="Text_Node" with="B.5.3.1">
+        <Update_Word>
+          <w1 oldValue="Fantasy" with="w1">Romance</w1>
+        </Update_Word>
+      </A.5.3.1>
+      <A.5.4.1 type="Text_Node" with="B.5.4.1">
+        <Update_Word>
+          <w1 oldValue="5.95" with="w1">4.95</w1>
+        </Update_Word>
+      </A.5.4.1>
+      <A.5.5.1 type="Text_Node" with="B.5.5.1">
+        <Update_Word>
+          <w1 oldValue="2001-09-10" with="w1">2000-09-02</w1>
+        </Update_Word>
+      </A.5.5.1>
+      <A.5.6.1 type="Text_Node" with="B.5.6.1">
+        <Update_Word>
+          <w1 oldValue="The" with="w1">When</w1>
+          <w2 oldValue="two" with="w2">Carla</w2>
+          <w3 oldValue="daughters" with="w3">meets</w3>
+          <w4 oldValue="of" with="w4">Paul</w4>
+          <w5 oldValue="Maeve," with="w5">at</w5>
+          <w6 oldValue="half-sisters," with="w6">an</w6>
+          <w7 oldValue="battle" with="w7">ornithology</w7>
+          <w8 oldValue="one" with="w8">conference,</w8>
+          <w9 oldValue="another" with="w9">tempers</w9>
+          <w10 oldValue="for" with="w10">fly</w10>
+          <w11 oldValue="control" with="w11">as</w11>
+          <w12 oldValue="of" with="w12">feathers</w12>
+          <w13 oldValue="England." with="w13">get</w13>
+          <w14 oldValue="Sequel" with="w14">ruffled.</w14>
+        </Update_Word>
+        <Delete_Word>
+          <w15>to</w15>
+          <w16>Oberon's</w16>
+          <w17>Legacy.</w17>
+        </Delete_Word>
+      </A.5.6.1>
+      <A.7 type="Element_Node" with="B.6">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk329" oldValue="bk107"/>
+          </Update_Attribute>
+          <Insert_Attribute>
+            <language>french</language>
+          </Insert_Attribute>
+        </Attributes>
+      </A.7>
+      <A.7.2.1 type="Text_Node" with="B.6.2.1">
+        <Insert_Word>
+          <w2>book</w2>
+        </Insert_Word>
+      </A.7.2.1>
+      <A.7.4.1 type="Text_Node" with="B.6.4.1">
+        <Update_Word>
+          <w1 oldValue="4.95" with="w1">5.65</w1>
+        </Update_Word>
+      </A.7.4.1>
+      <A.7.6 type="Element_Node" with="B.6.6">
+        <Label oldValue="description">summary</Label>
+      </A.7.6>
+      <A.10 type="Element_Node" with="B.7">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk108" oldValue="bk110"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.10>
+      <A.10.1.1 type="Text_Node" with="B.7.1.1">
+        <Update_Word>
+          <w1 oldValue="O'Brien," with="w1">Knorr,</w1>
+          <w2 oldValue="Tim" with="w2">Stefan</w2>
+        </Update_Word>
+      </A.10.1.1>
+      <A.10.2.1 type="Text_Node" with="B.7.2.1">
+        <Update_Word>
+          <w1 oldValue="Microsoft" with="w1">Creepy</w1>
+          <w2 oldValue=".NET:" with="w2">Crawlies</w2>
+        </Update_Word>
+        <Delete_Word>
+          <w3>The</w3>
+          <w4>Programming</w4>
+          <w5>Bible</w5>
+        </Delete_Word>
+      </A.10.2.1>
+      <A.10.3.1 type="Text_Node" with="B.7.3.1">
+        <Update_Word>
+          <w1 oldValue="Computer" with="w1">Horror</w1>
+        </Update_Word>
+      </A.10.3.1>
+      <A.10.4.1 type="Text_Node" with="B.7.4.1">
+        <Update_Word>
+          <w1 oldValue="36.95" with="w1">4.95</w1>
+        </Update_Word>
+      </A.10.4.1>
+      <A.10.5.1 type="Text_Node" with="B.7.5.1">
+        <Update_Word>
+          <w1 oldValue="2000-12-09" with="w1">2000-12-06</w1>
+        </Update_Word>
+      </A.10.5.1>
+      <A.10.6.1 type="Text_Node" with="B.7.6.1">
+        <Update_Word>
+          <w1 oldValue="Microsoft's" with="w1">An</w1>
+          <w2 oldValue=".NET" with="w2">anthology</w2>
+          <w3 oldValue="initiative" with="w3">of</w3>
+          <w4 oldValue="is" with="w4">horror</w4>
+          <w5 oldValue="explored" with="w5">stories</w5>
+          <w6 oldValue="in" with="w6">about</w6>
+          <w7 oldValue="detail" with="w7">roaches,</w7>
+          <w8 oldValue="in" with="w8">centipedes,</w8>
+          <w9 oldValue="this" with="w9">scorpions</w9>
+          <w10 oldValue="deep" with="w10">and</w10>
+          <w11 oldValue="programmer's" with="w11">other</w11>
+          <w12 oldValue="reference." with="w12">insects.</w12>
+        </Update_Word>
+      </A.10.6.1>
+      <A.11 type="Element_Node" with="B.8">
+        <Attributes>
+          <Update_Attribute>
+            <id change="value" newValue="bk109" oldValue="bk111"/>
+          </Update_Attribute>
+        </Attributes>
+      </A.11>
+      <A.11.1.1 type="Text_Node" with="B.8.1.1">
+        <Update_Word>
+          <w1 oldValue="O'Brien," with="w1">Kress,</w1>
+          <w2 oldValue="Tim" with="w2">Peter</w2>
+        </Update_Word>
+      </A.11.1.1>
+      <A.11.2.1 type="Text_Node" with="B.8.2.1">
+        <Update_Word>
+          <w1 oldValue="MSXML3:" with="w1">Paradox</w1>
+          <w2 oldValue="A" with="w2">Lost</w2>
+        </Update_Word>
+        <Delete_Word>
+          <w3>Comprehensive</w3>
+          <w4>Guide</w4>
+        </Delete_Word>
+      </A.11.2.1>
+      <A.11.4.1 type="Text_Node" with="B.8.4.1">
+        <Update_Word>
+          <w1 oldValue="36.95" with="w1">6.95</w1>
+        </Update_Word>
+      </A.11.4.1>
+      <A.11.5.1 type="Text_Node" with="B.8.5.1">
+        <Update_Word>
+          <w1 oldValue="2000-12-01" with="w1">2000-11-02</w1>
+        </Update_Word>
+      </A.11.5.1>
+      <A.11.6.1 type="Text_Node" with="B.8.6.1">
+        <Update_Word>
+          <w1 oldValue="The" with="w1">After</w1>
+          <w2 oldValue="Microsoft" with="w2">an</w2>
+          <w3 oldValue="MSXML3" with="w3">inadvertant</w3>
+          <w4 oldValue="parser" with="w4">trip</w4>
+          <w5 oldValue="is" with="w5">through</w5>
+          <w6 oldValue="covered" with="w6">a</w6>
+          <w7 oldValue="in" with="w7">Heisenberg</w7>
+          <w8 oldValue="detail," with="w8">Uncertainty</w8>
+          <w9 oldValue="with" with="w9">Device,</w9>
+          <w10 oldValue="attention" with="w10">James</w10>
+          <w11 oldValue="to" with="w11">Salway</w11>
+          <w12 oldValue="XML" with="w12">discovers</w12>
+          <w13 oldValue="DOM" with="w13">the</w13>
+          <w14 oldValue="interfaces," with="w14">problems</w14>
+          <w15 oldValue="XSLT" with="w15">of</w15>
+          <w16 oldValue="processing," with="w16">being</w16>
+          <w17 oldValue="SAX" with="w17">quantum.</w17>
+        </Update_Word>
+        <Delete_Word>
+          <w18>and</w18>
+          <w19>more.</w19>
+        </Delete_Word>
+      </A.11.6.1>
+    </Update>
+    <Delete>
+      <A.5.1 containedAT="B.3.1"/>
+      <A.6 containedAT="B.5"/>
+      <A.8 containedAT="B.7"/>
+      <A.9 containedAT="B.8"/>
+      <A.11.3 containedAT="B.1.3"/>
+      <A.12>
+        <book id="bk112">
+          <author>Galos, Mike</author>
+          <title>Visual Studio 7: A Comprehensive Guide</title>
+          <genre>Computer</genre>
+          <price>49.95</price>
+          <publish_date>2001-04-16</publish_date>
+          <description>Microsoft Visual Studio 7 is explored in depth, looking at how Visual Basic, Visual C++, C#, and ASP+ are integrated into a comprehensive development environment.</description>
+        </book>
+      </A.12>
+    </Delete>
+    <Insert>
+      <A.5.1 containedAT="A.6.1"/>
+      <A.8.3 containedAT="A.9.3"/>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

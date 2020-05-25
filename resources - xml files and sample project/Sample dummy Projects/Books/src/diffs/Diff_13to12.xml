@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="9" reversible="yes" similarity="47.05%" version="1.0">
+  <Original_File crc32="d7ce095b" name="book1.xml"/>
+  <Patched_File crc32="1a259b91" name="Books_v12.xml"/>
+  <Edit_Script>
+    <Insert>
+      <A.5>
+        <book id="bk105">
+          <author>Corets, Eva</author>
+          <title>The Sundered Grail</title>
+          <genre>Fantasy</genre>
+          <price>5.95</price>
+          <publish_date>2001-09-10</publish_date>
+          <description>The two daughters of Maeve, half-sisters, battle one another for control of England. Sequel to Oberon's Legacy.</description>
+        </book>
+      </A.5>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

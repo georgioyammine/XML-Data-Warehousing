@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="9" reversible="yes" similarity="93.91%" version="1.0">
+  <Original_File crc32="64dc6633" name="Project IDPA_v11.xml"/>
+  <Patched_File crc32="d1bf34fc" name="Project IDPA_v10.xml"/>
+  <Edit_Script>
+    <Delete>
+      <A.57.3>
+        <abstract>==Benutting van die Litosfeer (die Aardkors)==</abstract>
+      </A.57.3>
+    </Delete>
+    <Insert>
+      <A.57.3>
+        <abstract>Koniecznem następstwem odzyskania bytu politycznego przez Polskę jest, pomiędzy innemi, ogromny liczebnie wzrost wszelkiego rodzaju bibljotek, a co za tem idzie i zapotrzebowanie książek podręcznych, ułatwiających urządzanie i prowadzenie tych instytucji.</abstract>
+      </A.57.3>
+    </Insert>
+  </Edit_Script>
+</XDP_Patch>

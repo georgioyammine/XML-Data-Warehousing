@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XDP_Patch distance="0" reversible="yes" similarity="100.0%" version="1.0">
+  <Original_File crc32="4c92f4b7" name="Project IDPA_v6.xml"/>
+  <Patched_File crc32="4c92f4b7" name="Project IDPA_v5.xml"/>
+  <Edit_Script/>
+</XDP_Patch>

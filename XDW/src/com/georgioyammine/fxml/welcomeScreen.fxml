@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" stylesheets="@../css/all.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.georgioyammine.controllers.welcomeController">
+   <children>
+      <Label alignment="CENTER" layoutX="260.0" layoutY="14.0" prefHeight="77.0" prefWidth="244.0" text="Welcome Back!" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <JFXTabPane layoutY="98.0" prefHeight="352.0" prefWidth="800.0">
+         <tabs>
+            <Tab id="stabW" text="Open">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="265.0" prefWidth="470.0">
+                     <children>
+                        <JFXButton fx:id="openProject" layoutX="29.0" layoutY="128.0" onAction="#handleOpenProject" prefHeight="52.0" prefWidth="212.0" style="-fx-border-radius: 20;" text="Open project from file" />
+                        <JFXTabPane layoutX="268.0" layoutY="27.0" prefHeight="277.0" prefWidth="529.0">
+                           <tabs>
+                              <Tab id="stab" text="Recent">
+                                 <content>
+                                    <AnchorPane fx:id="recentPane" minHeight="0.0" minWidth="0.0" prefHeight="265.0" prefWidth="470.0">
+                                       <children>
+                                          <TableView id="RecentTable" fx:id="recentTable" layoutX="1.0" layoutY="1.0" prefHeight="230.0" prefWidth="527.0" stylesheets="@../css/dark_theme.css">
+                                            <columns>
+                                              <TableColumn fx:id="RecentNameCol" prefWidth="119.0" text="Name" />
+                                              <TableColumn fx:id="RecentAuthorCol" minWidth="9.0" prefWidth="120.0" text="Author" />
+                                                <TableColumn fx:id="RecentDirCol" prefWidth="101.0" text="Directory" />
+                                                <TableColumn fx:id="RecentModCol" minWidth="0.0" prefWidth="119.0" text="Last Modified" />
+                                                <TableColumn fx:id="RecentPinCol" prefWidth="52.0" />
+                                            </columns>
+                                          </TableView>
+                                       </children>
+                                       <stylesheets>
+                                          <URL value="@../css/dark_theme.css" />
+                                          <URL value="@../css/base.css" />
+                                       </stylesheets></AnchorPane>
+                                 </content>
+                              </Tab>
+                              <Tab id="stab" text="Pinned">
+                                 <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="442.0">
+                                       <children>
+                                          <TableView fx:id="pinnedTable" prefHeight="231.0" prefWidth="528.0" stylesheets="@../css/dark_theme.css">
+                                             <columns>
+                                                <TableColumn fx:id="PinnedNameCol" prefWidth="114.0" text="Name" />
+                                                <TableColumn fx:id="PinnedAuthorCol" prefWidth="100.0" text="Author" />
+                                                <TableColumn fx:id="PinnedDirCol" prefWidth="118.0" text="Directory" />
+                                                <TableColumn fx:id="PinnedModCol" prefWidth="128.0" text="Last Modified" />
+                                                <TableColumn fx:id="PinnedUnpinCol" prefWidth="54.0" />
+                                             </columns>
+                                          </TableView>
+                                       </children>
+                                       <stylesheets>
+                                          <URL value="@../css/base.css" />
+                                          <URL value="@../css/dark_theme.css" />
+                                       </stylesheets></AnchorPane>
+                                 </content>
+                              </Tab>
+                           </tabs>
+                        </JFXTabPane>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab id="stabW" text="New">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="442.0">
+                     <children>
+                        <JFXButton layoutX="35.0" layoutY="31.0" onAction="#chooseDirHandler" text="Choose Directory" />
+                        <JFXTextField fx:id="nameId" layoutX="202.0" layoutY="87.0" promptText="Name of Project" />
+                        <JFXTextField fx:id="authorId" layoutX="202.0" layoutY="138.0" promptText="Author" />
+                        <Label layoutX="35.0" layoutY="97.0" prefHeight="21.0" prefWidth="157.0" text="Name of Project" textFill="#b2b2b2" />
+                        <Label layoutX="35.0" layoutY="146.0" text="Author of Project" textFill="#b2b2b2" />
+                        <Label fx:id="dirPath" layoutX="199.0" layoutY="27.0" prefHeight="48.0" prefWidth="558.0" text="C:\Users\User\Documents\IDPA Project - XML Diff and Parsing\IDPA GUI\PATCH_afwikibooks-20200101-pages-meta-current.xml_afwikibooks-20200120-pages-meta-current.xml_1.0.xmlC:\Users\User\Documents\IDPA Project - XML Diff and Parsing\IDPA GUI\PATCH_afwikibooks-20200101-pages-meta-current.xml_afwikibooks-20200120-pages-meta-current.xml_1.0.xml" textAlignment="CENTER" textFill="#b2b2b2" textOverrun="LEADING_ELLIPSIS" wrapText="true" />
+                        <Label layoutX="35.0" layoutY="197.0" text="Password of Project" textFill="#b2b2b2" visible="false" />
+                        <JFXPasswordField fx:id="passId" layoutX="202.0" layoutY="189.0" promptText="Password" />
+                        <Label layoutX="35.0" layoutY="247.0" text="Confirm Password" textFill="#b2b2b2" visible="false" />
+                        <JFXPasswordField fx:id="confPassId" layoutX="202.0" layoutY="240.0" promptText="Confirm password" />
+                        <JFXButton fx:id="createProject" layoutX="522.0" layoutY="169.0" onAction="#handleCreateProject" prefHeight="52.0" prefWidth="212.0" style="-fx-border-radius: 20;" text="Create New Project" />
+                        <Label fx:id="errorMessage" alignment="CENTER" layoutX="475.0" layoutY="230.0" prefHeight="68.0" prefWidth="303.0" text="ERROR 1 : akubkkkkkkkkkkkkkkkkkkkkkkkkkk" textAlignment="CENTER" textFill="#e82727" textOverrun="LEADING_ELLIPSIS" underline="true" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+   </children>
+</AnchorPane>

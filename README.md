@@ -1,6 +1,6 @@
 # XDW - XML Data Warehouse
 
-XDW is a tool in Java for **XML Data Warehousing**, **Version Control** and **Temporal Querying**, where huge number of files or versions need to be stored. The tool we developed uses **XDP - XML Diff and Patch** to get **diff** files and therefore **save space**. The application stores the **last version of the document along with the backward deltas** in order to query the past.
+XDW is a tool in Java for **XML Data Warehousing**, **Version Control** and **Temporal Querying**, where huge number of files or versions need to be stored. The tool we developed uses [XDP - XML Diff and Patch](https://github.com/georgioyammine/XDP-XML-Diff-and-Patch) to get **diff** files and therefore **save space**. The application stores the **last version of the document along with the backward deltas** in order to query the past.
 
 This Application is part of a project in the Lebanese American University, Course:  Intelligent Data Processing and Applications (COE 543/743).
 

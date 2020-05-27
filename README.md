@@ -4,12 +4,15 @@ XDW is a tool in Java for **XML Data Warehousing**, **Version Control** and **Te
 
 This Application is part of a project in the Lebanese American University, Course:  Intelligent Data Processing and Applications (COE 543/743).
 
-This Tool is built by **Georgio Yammine** and **Rami Naffah**.
-
 App Version: 1.1 - backward compatible with the older version.
 
-Tools Used: **Java 8**, **JavaFX** and **FXML** with **JFoenix** and **TilesFX** Libraries.
+## Authors
+This Tool is built by **Georgio Yammine** and **Rami Naffah**.
 
+## Tools Used
+**Java 8**, **JavaFX** and **FXML** with **JFoenix** and **TilesFX** Libraries.
+
+## Runnables and Project
 Project and **runnable** **jar** file created in **eclipse**.
 
 **exe** created using **launch4j**.

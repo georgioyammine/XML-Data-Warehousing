@@ -31,8 +31,8 @@ public class XDW_Launcher extends Application {
 		stage.setScene(scene);
 		if(launchName.equals("loadingScreen.fxml"))
 			stage.initStyle(StageStyle.UNDECORATED);
-//		else
-//			stage.setResizable(false);
+		else
+			stage.setResizable(false);
 		stage.setTitle("XDW - XML Data Warehousing ");
 		// stage.getIcons().add(new Image("iconN (1).png"));
 //		stage.getIcons().add(new Image("icon-main@3x.png"));
